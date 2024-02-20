@@ -217,7 +217,6 @@ const AllSongs = () => {
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
-
 				<Songs>
 					<Img src={banner} />
 					<Details>

@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { SearchInput } from "../form/SearchInput";
+import Login from "../form/Login";
+import { Modal } from "antd";
+import Register from "../form/Register";
 
 const Nav = styled.div`
 	height: 60px;
@@ -86,12 +89,35 @@ const LogoutButton = styled.button`
 `;
 
 const Navbar = () => {
+	const [login, setlogin] = useState(false);
+	const [signup, setSignup] = useState(false);
 	return (
 		<Nav>
 			<SearchInput />
 			<ButtonContainer>
-				<LoginButton href="/login">Login</LoginButton>
-				<RegisterButton href="/register">Register</RegisterButton>
+				<LoginButton onClick={() => setlogin(!login)}>Login</LoginButton>
+				<Modal
+					centered
+					open={login}
+					onCancel={() => setlogin(!login)}
+					footer={null}
+					width={300}
+				>
+					<Login />
+				</Modal>
+
+				<RegisterButton onClick={() => setSignup(!signup)}>
+					Register
+				</RegisterButton>
+				<Modal
+					centered
+					open={signup}
+					onCancel={() => setSignup(!signup)}
+					footer={null}
+					width={350}
+				>
+					<Register />
+				</Modal>
 			</ButtonContainer>
 		</Nav>
 	);

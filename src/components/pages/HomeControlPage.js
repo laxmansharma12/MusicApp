@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { AiFillHome } from "react-icons/ai";
 import { MdCloudUpload } from "react-icons/md";
+import { Modal } from "antd";
+import SongUpload from "../form/SongUpload";
+
 const Container = styled.div`
 	display: flex;
 	justify-content: center;
@@ -22,16 +25,26 @@ const Item = styled.div`
 `;
 
 const HomeControlPage = () => {
+	const [upload, setUpload] = useState(false);
 	return (
 		<Container>
 			<Item>
 				<AiFillHome />
 				Home
 			</Item>
-			<Item>
+			<Item onClick={() => setUpload(!upload)}>
 				<MdCloudUpload />
 				Upload
 			</Item>
+			<Modal
+				centered
+				open={upload}
+				onCancel={() => setUpload(!upload)}
+				footer={null}
+				width={350}
+			>
+				<SongUpload />
+			</Modal>
 		</Container>
 	);
 };
