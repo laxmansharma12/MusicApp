@@ -44,6 +44,19 @@ const Img = styled.img`
 	border-top-left-radius: 15%;
 	padding: 7px 8px 5px;
 `;
+const IMG = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 45%;
+	margin: 5px 5px 0;
+	width: 80%;
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
+	font-size: 60px;
+	border: 1px solid #121212;
+	padding: 7px 8px 5px;
+`;
 const Name = styled.label`
 	font-weight: bold;
 `;
@@ -87,112 +100,118 @@ const AllSongs = () => {
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<IMG>
+						<PiMusicNoteFill />
+					</IMG>
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<IMG>
+						<PiMusicNoteFill />
+					</IMG>
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<IMG>
+						<PiMusicNoteFill />
+					</IMG>
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
@@ -200,14 +219,14 @@ const AllSongs = () => {
 				</Songs>
 
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
 					</Details>
 				</Songs>
 				<Songs>
-					<Img src={banner} />{" "}
+					<Img src={banner} />
 					<Details>
 						<Name>Shubh</Name>
 						<Artist>fowhfdfed</Artist>
