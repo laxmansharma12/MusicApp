@@ -10,14 +10,22 @@ const Container = styled.div`
 	flex-direction: column;
 	gap: 10px;
 	background-color: #121212;
-	height: 97vh;
 	border-radius: 10px;
 `;
-
+const Nav = styled.div`
+	position: relative;
+	height: 60px;
+	width: 100%;
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0px;
+`;
 const MusicPage = () => {
 	return (
 		<Container>
-			<Navbar />
+			<Nav>
+				<Navbar />
+			</Nav>
 			<Player />
 		</Container>
 	);

@@ -14,24 +14,34 @@ const Container = styled.div`
 `;
 
 const LeftContainer = styled.div`
+	position: relative;
+	width: 19.7%;
+	height: 50vh;
+`;
+const LeftFixed = styled.div`
+	position: fixed;
 	display: flex;
 	justify-content: center;
 	align-items: start;
 	flex-direction: column;
 	gap: 10px;
-	/* border: 1px solid red; */
-	width: 20%;
+	width: inherit;
+	top: 10px;
 `;
 const RightContainer = styled.div`
 	width: 80%;
+	top: 10px;
 `;
 
 const Home = () => {
 	return (
 		<Container>
 			<LeftContainer>
-				<HomeControlPage />
-				<PlaylistPage />
+				<LeftFixed>
+					{" "}
+					<HomeControlPage />
+					<PlaylistPage />
+				</LeftFixed>
 			</LeftContainer>
 			<RightContainer>
 				<MusicPage />

@@ -14,6 +14,7 @@ const Container = styled.div`
 	color: #fff;
 	padding: 20px 25px 20px;
 	border-radius: 10px;
+	height: 78vh;
 	width: 80%;
 `;
 
@@ -46,7 +47,6 @@ const ContainerInner = styled.div`
 	flex-direction: column;
 	gap: 13px;
 	width: 100%;
-	max-height: 67vh;
 	height: 100%;
 	overflow-y: hidden;
 	&:hover {

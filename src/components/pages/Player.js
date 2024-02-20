@@ -2,12 +2,14 @@ import React from "react";
 import styled from "styled-components";
 import MusicPlayer from "./MusicPlayer";
 import UpComingSongs from "./UpComingSongs";
+import AllSongs from "./AllSongs";
 
 const Container = styled.div`
 	display: flex;
 	justify-content: center;
-	align-items: start;
+	align-items: center;
 	flex-direction: column;
+	gap: 10px;
 	width: 100%;
 `;
 
@@ -26,6 +28,7 @@ const Player = () => {
 				<MusicPlayer />
 				<UpComingSongs />
 			</ControllerSection>
+			<AllSongs />
 		</Container>
 	);
 };
