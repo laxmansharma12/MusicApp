@@ -71,6 +71,7 @@ const PlayList = styled.div`
 	justify-content: space-between;
 	align-items: start;
 	gap: 10px;
+	cursor: pointer;
 `;
 const Img = styled.div`
 	border: 1px solid #fff;

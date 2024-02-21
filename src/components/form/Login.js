@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { Modal } from "antd";
+import { useAuth } from "../../context/authProvider";
+import ForgotPassword from "./ForgotPassword";
 
 const LoginContainer = styled.div`
 	display: flex;
@@ -66,66 +71,102 @@ const Span = styled.span`
 	color: rgb(66, 64, 64);
 `;
 
-const Login = () => {
-	const [email, SetEmail] = useState();
+const Login = ({ login, setLogin, signup, setSignup }) => {
+	const [auth, setAuth] = useAuth();
+	const [email, setEmail] = useState();
 	const [password, setPassword] = useState();
+	const [showResetForm, setShowResetForm] = useState(false);
+
 	const handleLogin = async (e) => {
 		e.preventDefault();
-		// try {
-		// 	const res = await axios.post(
-		// 		`${process.env.REACT_APP_API_BASE_URL}/api/v1/auth/login`,
-		// 		{
-		// 			email,
-		// 			password,
-		// 		}
-		// 	);
-		// 	if (res.data.success) {
-		// 		toast.success(res.data.message);
-		// 		setAuth({
-		// 			...auth,
-		// 			user: res.data.user,
-		// 			token: res.data.token,
-		// 		});
-		// 		localStorage.setItem("auth", JSON.stringify(res.data));
-		// 		setPassword("");
-		// 		SetEmail("");
-		// 		navigate(-1);
-		// 	} else {
-		// 		toast.error(res.data.message);
-		// 	}
-		// } catch (error) {}
+		try {
+			const res = await axios.post(
+				`${process.env.REACT_APP_API_BASE_URL}/api/v1/auth/login`,
+				{
+					email,
+					password,
+				}
+			);
+			if (res.data.success) {
+				toast.success(res.data.message);
+				setLogin(!login);
+				setAuth({
+					...auth,
+					user: res.data.user,
+					token: res.data.token,
+				});
+				localStorage.setItem("auth", JSON.stringify(res.data));
+			} else {
+				toast.error(res.data.message);
+			}
+		} catch (error) {
+			console.error("Login Error:", error);
+		}
 	};
+
 	return (
-		<LoginContainer>
-			<LoginHeader>Login</LoginHeader>
-			<Form onSubmit={handleLogin}>
-				<Section>
-					<L htmlFor="email">Email</L>
-					<Input
-						type="email"
-						placeholder="Enter email"
-						required
-						onChange={(e) => SetEmail(e.target.value)}
-					></Input>
-				</Section>
-				<Section>
-					<L htmlFor="password">Password</L>
-					<Input
-						type="text"
-						placeholder="Enter password"
-						required
-						onChange={(e) => setPassword(e.target.value)}
-					></Input>
+		<Modal
+			centered
+			open={login}
+			onCancel={() => setLogin(!login)}
+			footer={null}
+			width={300}
+		>
+			{!showResetForm && (
+				<LoginContainer>
+					<LoginHeader>Login</LoginHeader>
+					<Form onSubmit={handleLogin}>
+						<Section>
+							<L htmlFor="email">Email</L>
+							<Input
+								type="email"
+								placeholder="Enter email"
+								required
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+							/>
+						</Section>
+						<Section>
+							<L htmlFor="password">Password</L>
+							<Input
+								type="password"
+								placeholder="Enter password"
+								required
+								onChange={(e) => setPassword(e.target.value)}
+							/>
+							<Span>
+								Forgot password?{" "}
+								<Link
+									onClick={() => {
+										setShowResetForm(!showResetForm);
+									}}
+								>
+									Reset
+								</Link>
+							</Span>
+						</Section>
+						{!showResetForm && <Button type="submit">Login</Button>}
+					</Form>
 					<Span>
-						Forgot password? <Link to="/forgot-password">Reset</Link>
+						Not registered?{" "}
+						<Link
+							onClick={() => {
+								setLogin(!login);
+								setSignup(!signup);
+							}}
+						>
+							Register
+						</Link>
 					</Span>
-				</Section>
-				<Button type="submit">Login</Button>
-			</Form>
-			<Span>
-				Not registered? <Link to="/register">Register</Link>
-			</Span>
-		</LoginContainer>
+				</LoginContainer>
+			)}
+			{showResetForm && (
+				<ForgotPassword
+					showResetForm={showResetForm}
+					setShowResetForm={setShowResetForm}
+				/>
+			)}
+		</Modal>
 	);
 };
 

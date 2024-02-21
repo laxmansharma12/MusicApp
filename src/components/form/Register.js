@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
+import { Modal } from "antd";
 
 const RegisterContainer = styled.div`
 	display: flex;
@@ -66,7 +69,7 @@ const Span = styled.span`
 	color: rgb(66, 64, 64);
 `;
 
-const Register = () => {
+const Register = ({ signup, setSignup, login, setLogin }) => {
 	const [name, SetName] = useState();
 	const [email, setEmail] = useState();
 	const [password, setPassword] = useState();
@@ -74,74 +77,86 @@ const Register = () => {
 
 	const handlesubmit = async (e) => {
 		e.preventDefault();
-		// try {
-		// 	const res = await axios.post(
-		// 		`${process.env.REACT_APP_API_BASE_URL}/api/v1/auth/register`,
-		// 		{
-		// 			name,
-		// 			email,
-		// 			password,
-		// 			answer,
-		// 		}
-		// 	);
-		// 	if (res.data.success) {
-		// 		toast.success(res.data.message);
-		// 		navigate("/login");
-		// 	} else {
-		// 		toast.error(res.data.message);
-		// 	}
-		// } catch (error) {}
+		try {
+			const res = await axios.post(
+				`${process.env.REACT_APP_API_BASE_URL}/api/v1/auth/register`,
+				{ name, email, password, answer }
+			);
+			if (res.data.success) {
+				toast.success(res.data.message);
+				setSignup(!signup);
+			} else {
+				toast.error(res.data.message);
+			}
+		} catch (error) {}
 	};
+
 	return (
-		<RegisterContainer>
-			<RegisterHeader>Register</RegisterHeader>
-			<Form onSubmit={handlesubmit}>
-				<Section>
-					<L htmlFor="name">Name</L>
-					<Input
-						className="form-control"
-						type="text"
-						required
-						// placeholder="Enter your name"
-						onChange={(e) => SetName(e.target.value)}
-					></Input>
-				</Section>
-				<Section>
-					<L htmlFor="email">Email</L>
-					<Input
-						className="form-control"
-						type="email"
-						required
-						// placeholder="Enter your email"
-						onChange={(e) => setEmail(e.target.value)}
-					></Input>
-				</Section>
-				<Section>
-					<L htmlFor="password">Password</L>
-					<Input
-						className="form-control"
-						type="text"
-						required
-						// placeholder="Enter password"
-						onChange={(e) => setPassword(e.target.value)}
-					></Input>
-				</Section>
-				<Section>
-					<L htmlFor="question">Which is your favourite song?</L>
-					<Input
-						className="form-control"
-						type="text"
-						required
-						// placeholder="Enter your answer"
-						onChange={(e) => setAnswer(e.target.value)}
-					></Input>
-				</Section>
-				<Button type="submit">Register</Button>
-			</Form>
-			<Span>
-				Allready registered? <Link to="/login">Login</Link>
-			</Span>
-		</RegisterContainer>
+		<Modal
+			centered
+			open={signup}
+			onCancel={() => setSignup(!signup)}
+			footer={null}
+			width={350}
+		>
+			<RegisterContainer>
+				<RegisterHeader>Register</RegisterHeader>
+				<Form onSubmit={handlesubmit}>
+					<Section>
+						<L htmlFor="name">Name</L>
+						<Input
+							className="form-control"
+							type="text"
+							required
+							// placeholder="Enter your name"
+							onChange={(e) => SetName(e.target.value)}
+						></Input>
+					</Section>
+					<Section>
+						<L htmlFor="email">Email</L>
+						<Input
+							className="form-control"
+							type="email"
+							required
+							// placeholder="Enter your email"
+							onChange={(e) => setEmail(e.target.value)}
+						></Input>
+					</Section>
+					<Section>
+						<L htmlFor="password">Password</L>
+						<Input
+							className="form-control"
+							type="text"
+							required
+							// placeholder="Enter password"
+							onChange={(e) => setPassword(e.target.value)}
+						></Input>
+					</Section>
+					<Section>
+						<L htmlFor="question">Which is your favourite song?</L>
+						<Input
+							className="form-control"
+							type="text"
+							required
+							// placeholder="Enter your answer"
+							onChange={(e) => setAnswer(e.target.value)}
+						></Input>
+					</Section>
+					<Button type="submit">Register</Button>
+				</Form>
+				<Span>
+					Allready registered?{" "}
+					<Link
+						onClick={() => {
+							setLogin(!login);
+							setSignup(!signup);
+						}}
+					>
+						Login
+					</Link>
+				</Span>
+			</RegisterContainer>
+		</Modal>
 	);
 };
 

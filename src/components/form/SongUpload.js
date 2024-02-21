@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Upload, Select } from "antd";
+import { Modal, Button, Upload, Select } from "antd";
 
 const Option = Select;
 
@@ -70,40 +70,47 @@ const Btn = styled.button`
 	}
 `;
 
-const SongUpload = () => {
+const SongUpload = ({ upload, setUpload }) => {
 	return (
-		<Container>
-			<Header>Upload Your Song</Header>
-			<Form>
-				<Section>
-					<Upload
-						action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-						listType="picture"
-					>
-						<Button icon={<UploadOutlined />}>Upload</Button>
-					</Upload>
-				</Section>
-				<Section>
-					<L htmlFor="song-name">Song Name</L>
-					<Input type="text" placeholder="Enter Song Name" required></Input>
-				</Section>
-				<Section>
-					<L htmlFor="artirt-name">Artist Name</L>
-					<Input type="text" placeholder="Enter Song Name"></Input>
-				</Section>
-				<Section>
-					<L htmlFor="playlist">Playlist</L>
-					<Select
-						placeholder="Select Playlist"
-						className="select-playlist"
-						size="large"
-						onChange={(value) => {}}
-					>
-						<Option>a</Option>
-						<Option>a</Option>
-						<Option>a</Option>
+		<Modal
+			centered
+			open={upload}
+			onCancel={() => setUpload(!upload)}
+			footer={null}
+			width={350}
+		>
+			<Container>
+				<Header>Upload Your Song</Header>
+				<Form>
+					<Section>
+						<Upload
+							action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+							listType="picture"
+						>
+							<Button icon={<UploadOutlined />}>Upload</Button>
+						</Upload>
+					</Section>
+					<Section>
+						<L htmlFor="song-name">Song Name</L>
+						<Input type="text" placeholder="Enter Song Name" required></Input>
+					</Section>
+					<Section>
+						<L htmlFor="artirt-name">Artist Name</L>
+						<Input type="text" placeholder="Enter Song Name"></Input>
+					</Section>
+					<Section>
+						<L htmlFor="playlist">Playlist</L>
+						<Select
+							placeholder="Select Playlist"
+							className="select-playlist"
+							size="large"
+							onChange={(value) => {}}
+						>
+							<Option>a</Option>
+							<Option>a</Option>
+							<Option>a</Option>
 
-						{/* {auth.user && (
+							{/* {auth.user && (
 								<>
 									{categories?.map((c) => (
 										<Option key={c._id} value={c._id}>
@@ -112,11 +119,12 @@ const SongUpload = () => {
 									))}
 								</>
 							)} */}
-					</Select>
-				</Section>
-				<Btn type="submit">Upload</Btn>
-			</Form>
-		</Container>
+						</Select>
+					</Section>
+					<Btn type="submit">Upload</Btn>
+				</Form>
+			</Container>
+		</Modal>
 	);
 };
 

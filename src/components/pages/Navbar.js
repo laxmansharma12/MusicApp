@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { SearchInput } from "../form/SearchInput";
 import Login from "../form/Login";
-import { Modal } from "antd";
 import Register from "../form/Register";
+import toast from "react-hot-toast";
+import { useAuth } from "../../context/authProvider";
 
 const Nav = styled.div`
 	height: 60px;
@@ -39,7 +40,7 @@ const LoginButton = styled.a`
 	text-align: center;
 	text-decoration: none;
 	font-size: 16px;
-	transition: all 0.6s ease-in-out;
+	transition: all 0.2s ease-in-out;
 	&:hover {
 		background-color: #383636;
 	}
@@ -57,7 +58,7 @@ const RegisterButton = styled.a`
 	font-weight: 500;
 	text-decoration: none;
 	font-size: 16px;
-	transition: all 0.6s ease-in-out;
+	transition: all 0.2s ease-in-out;
 	&:hover {
 		background-color: #383636;
 	}
@@ -66,22 +67,19 @@ const RegisterButton = styled.a`
 	}
 `;
 const LogoutButton = styled.button`
-	background-color: rgb(5, 163, 49);
+	background-color: rgb(209, 19, 19);
 	border: none;
-	justify-content: center;
-	display: flex;
-	align-items: center;
-	height: 70%;
 	border-radius: 20px;
 	color: #fff;
 	cursor: pointer;
-	padding: 0 20px;
-	font-weight: 500;
+	padding: 9px 18px;
+	font-weight: bold;
+	text-align: center;
 	text-decoration: none;
 	font-size: 16px;
-	transition: all 0.6s ease-in-out;
+	transition: all 0.2s ease-in-out;
 	&:hover {
-		background-color: rgb(13, 207, 68);
+		background-color: rgb(230, 30, 30);
 	}
 	@media screen and (max-width: 768px) {
 		font-size: 14px;
@@ -89,35 +87,49 @@ const LogoutButton = styled.button`
 `;
 
 const Navbar = () => {
-	const [login, setlogin] = useState(false);
+	const [auth, setAuth] = useAuth();
+	const [login, setLogin] = useState(false);
 	const [signup, setSignup] = useState(false);
+
+	const HandleLogout = () => {
+		setAuth({
+			...auth,
+			user: null,
+			token: "",
+		});
+		toast.success("Logout Successfully!!");
+		localStorage.removeItem("auth");
+	};
 	return (
 		<Nav>
 			<SearchInput />
 			<ButtonContainer>
-				<LoginButton onClick={() => setlogin(!login)}>Login</LoginButton>
-				<Modal
-					centered
-					open={login}
-					onCancel={() => setlogin(!login)}
-					footer={null}
-					width={300}
-				>
-					<Login />
-				</Modal>
-
-				<RegisterButton onClick={() => setSignup(!signup)}>
-					Register
-				</RegisterButton>
-				<Modal
-					centered
-					open={signup}
-					onCancel={() => setSignup(!signup)}
-					footer={null}
-					width={350}
-				>
-					<Register />
-				</Modal>
+				{!auth.user ? (
+					<>
+						<LoginButton onClick={() => setLogin(!login)}>Login</LoginButton>
+						{login && (
+							<Login
+								login={login}
+								setLogin={setLogin}
+								signup={signup}
+								setSignup={setSignup}
+							/>
+						)}
+						<RegisterButton onClick={() => setSignup(!signup)}>
+							Register
+						</RegisterButton>
+						{signup && (
+							<Register
+								signup={signup}
+								setSignup={setSignup}
+								login={login}
+								setLogin={setLogin}
+							/>
+						)}
+					</>
+				) : (
+					<LogoutButton onClick={() => HandleLogout()}>Logout</LogoutButton>
+				)}
 			</ButtonContainer>
 		</Nav>
 	);
