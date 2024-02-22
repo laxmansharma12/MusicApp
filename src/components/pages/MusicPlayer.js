@@ -224,9 +224,11 @@ const MusicPlayer = () => {
 	const SetPlayingSong = async () => {
 		// Assuming songs is an array of promises
 		if (songsListArray.length !== 0) {
-			const lastPlayedSongIndex = localStorage.getItem("lastPlayedSongIndex");
-			const lastPlayedSongProgress = localStorage.getItem(
-				"lastPlayedSongProgress"
+			const lastPlayedSongIndex = JSON.parse(
+				localStorage.getItem("lastPlayedSongIndex")
+			);
+			const lastPlayedSongProgress = JSON.parse(
+				localStorage.getItem("lastPlayedSongProgress")
 			);
 			if (lastPlayedSongProgress >= 0 && lastPlayedSongIndex >= 0 && !song) {
 				setPlayingSong({
@@ -238,41 +240,21 @@ const MusicPlayer = () => {
 				AudioEle.current.currentTime = lastPlayedSongProgress;
 			}
 			if (song) {
-				if (lastPlayedSongProgress >= 0 && lastPlayedSongIndex >= 0) {
-					setPlayingSong({
-						title: songsListArray[lastPlayedSongIndex].name,
-						artist: songsListArray[lastPlayedSongIndex].artist,
-						current: songsListArray[lastPlayedSongIndex].music.url,
-						url: songsListArray[lastPlayedSongIndex].photo.url,
-					});
-					AudioEle.current.currentTime = lastPlayedSongProgress;
-				} else {
-					if (lastPlayedSongProgress >= 0 && lastPlayedSongIndex >= 0) {
-						setPlayingSong({
-							title: songsListArray[lastPlayedSongIndex].name,
-							artist: songsListArray[lastPlayedSongIndex].artist,
-							current: songsListArray[lastPlayedSongIndex].music.url,
-							url: songsListArray[lastPlayedSongIndex].photo.url,
-						});
-						AudioEle.current.currentTime = lastPlayedSongProgress;
-					} else {
-						setPlayingSong({
-							title: song?.name,
-							artist: song?.artist,
-							current: song?.music?.url,
-							url: song?.photo?.url,
-						});
-						AudioEle.current.currentTime = 0;
-						// Add event listener for loadedmetadata
-						AudioEle.current.addEventListener("loadedmetadata", () => {
-							if (isPlaying) {
-								AudioEle.current.play();
-								setIsPlaying(true);
-								navigate("/");
-							}
-						});
+				setPlayingSong({
+					title: song?.name,
+					artist: song?.artist,
+					current: song?.music?.url,
+					url: song?.photo?.url,
+				});
+				AudioEle.current.currentTime = 0;
+				// Add event listener for loadedmetadata
+				AudioEle.current.addEventListener("loadedmetadata", () => {
+					if (isPlaying) {
+						AudioEle.current.play();
+						setIsPlaying(true);
+						navigate("/");
 					}
-				}
+				});
 			} else {
 				setPlayingSong({
 					title: songsListArray[0].name,
@@ -393,12 +375,14 @@ const MusicPlayer = () => {
 
 	// Function to save last played song details to local storage
 	const saveLastPlayedSongIndex = () => {
+		localStorage.removeItem("lastPlayedSongIndex");
 		const currentIndex = songsListArray.findIndex(
 			(song) => song.name === playingSong.title
 		);
 		localStorage.setItem("lastPlayedSongIndex", currentIndex);
 	};
 	const saveLastPlayedSongProgress = () => {
+		localStorage.removeItem("lastPlayedSongProgress");
 		localStorage.setItem(
 			"lastPlayedSongProgress",
 			AudioEle.current.currentTime
