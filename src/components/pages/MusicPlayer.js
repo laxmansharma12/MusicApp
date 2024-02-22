@@ -33,8 +33,9 @@ const Img = styled.img`
 	object-fit: cover;
 	width: 35%;
 	@media (max-width: 640px) {
-		width: 100%;
+		width: 95%;
 		height: 200px;
+		margin-top: 10px;
 	}
 `;
 const Details = styled.div`
