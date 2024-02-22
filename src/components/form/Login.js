@@ -105,14 +105,14 @@ const Login = ({ login, setLogin, signup, setSignup }) => {
 	};
 
 	return (
-		<Modal
-			centered
-			open={login}
-			onCancel={() => setLogin(!login)}
-			footer={null}
-			width={300}
-		>
-			{!showResetForm && (
+		<>
+			<Modal
+				centered
+				open={login}
+				onCancel={() => setLogin(!login)}
+				footer={null}
+				width={300}
+			>
 				<LoginContainer>
 					<LoginHeader>Login</LoginHeader>
 					<Form onSubmit={handleLogin}>
@@ -159,14 +159,15 @@ const Login = ({ login, setLogin, signup, setSignup }) => {
 						</Link>
 					</Span>
 				</LoginContainer>
-			)}
+			</Modal>
 			{showResetForm && (
 				<ForgotPassword
+					setLogin={setLogin}
 					showResetForm={showResetForm}
 					setShowResetForm={setShowResetForm}
 				/>
 			)}
-		</Modal>
+		</>
 	);
 };
 

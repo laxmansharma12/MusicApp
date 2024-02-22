@@ -12,7 +12,7 @@ const AuthProvider = ({ children }) => {
 		const data = localStorage.getItem("auth");
 		if (data) {
 			const parseData = JSON.parse(data);
-			setAuth(parseData); // Corrected line
+			setAuth(parseData);
 		}
 	}, []);
 

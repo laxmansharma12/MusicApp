@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { GiBookshelf } from "react-icons/gi";
 import { FaPlus } from "react-icons/fa6";
-import { PiMusicNoteFill } from "react-icons/pi";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Container = styled.div`
 	display: flex;
@@ -42,7 +43,7 @@ const Label = styled.label``;
 
 const ContainerInner = styled.div`
 	display: flex;
-	justify-content: center;
+	justify-content: start;
 	align-items: start;
 	flex-direction: column;
 	gap: 13px;
@@ -73,9 +74,11 @@ const PlayList = styled.div`
 	gap: 10px;
 	cursor: pointer;
 `;
-const Img = styled.div`
-	border: 1px solid #fff;
-	padding: 7px 8px 5px;
+const Img = styled.img`
+	border: 1px solid rgb(130, 133, 135);
+	height: 30px;
+	width: 30px;
+	margin-top: 2px;
 	border-radius: 50%;
 `;
 const Name = styled.label`
@@ -94,6 +97,25 @@ const Details = styled.div`
 `;
 
 const PlaylistPage = () => {
+	const [playlists, setPlaylists] = useState([]);
+
+	//get all playlist
+	const getAllPlaylists = async () => {
+		try {
+			const { data } = await axios.get(
+				`${process.env.REACT_APP_API_BASE_URL}/api/v1/playlist/get-playlist`
+			);
+			if (data?.success) {
+				setPlaylists(data?.playlist);
+			}
+		} catch (error) {
+			console.log(error);
+			toast.error("Something wwent wrong in getting playlist");
+		}
+	};
+	useEffect(() => {
+		getAllPlaylists();
+	}, []);
 	return (
 		<Container>
 			<Header>
@@ -107,132 +129,15 @@ const PlaylistPage = () => {
 				<Label>Playlist</Label>
 			</Title>
 			<ContainerInner>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
+				{playlists?.map((p) => (
+					<PlayList key={p._id}>
+						<Img src={p?.photo?.url} alt="playlist Photo" />
+						<Details>
+							<Name>{p.name}</Name>
+							<Artist>fowhfdfed</Artist>
+						</Details>
+					</PlayList>
+				))}
 			</ContainerInner>
 		</Container>
 	);

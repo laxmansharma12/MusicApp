@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { PiMusicNoteFill } from "react-icons/pi";
-import banner from "../images/banner.png";
+import { useAllSongs } from "../../context/SongsProvider";
 
 const Container = styled.div`
 	display: flex;
@@ -11,7 +10,9 @@ const Container = styled.div`
 	background-color: rgba(44, 42, 42, 0.762);
 	border-radius: 10px;
 	width: 96%;
+	min-height: 44vh;
 	padding: 10px;
+	margin-bottom: 10px;
 	color: #fff;
 `;
 const Header = styled.h2`
@@ -20,7 +21,7 @@ const Header = styled.h2`
 
 const SongsContainer = styled.div`
 	display: flex;
-	justify-content: center;
+	justify-content: start;
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 10px;
@@ -44,19 +45,7 @@ const Img = styled.img`
 	border-top-left-radius: 15%;
 	padding: 7px 8px 5px;
 `;
-const IMG = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 45%;
-	margin: 5px 5px 0;
-	width: 80%;
-	border-top-right-radius: 10px;
-	border-top-left-radius: 10px;
-	font-size: 60px;
-	border: 1px solid #121212;
-	padding: 7px 8px 5px;
-`;
+
 const Name = styled.label`
 	font-weight: bold;
 `;
@@ -74,163 +63,33 @@ const Details = styled.div`
 `;
 
 const AllSongs = () => {
+	const [songs, setSongs] = useAllSongs();
+	const [songsListArray, setSongsListArray] = useState([]);
+	//get all recipes
+	const GetAllSongs = async () => {
+		const updatedRecipesListArray = songs?.songs;
+
+		// Set the new array to the state
+		setSongsListArray(updatedRecipesListArray);
+	};
+
+	//lifecycle method
+	useEffect(() => {
+		GetAllSongs();
+	}, [songs]);
 	return (
 		<Container>
 			<Header>All Songs</Header>
 			<SongsContainer>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<IMG>
-						<PiMusicNoteFill />
-					</IMG>
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<IMG>
-						<PiMusicNoteFill />
-					</IMG>
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<IMG>
-						<PiMusicNoteFill />
-					</IMG>
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
-				<Songs>
-					<Img src={banner} />
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</Songs>
+				{songsListArray?.map((s) => (
+					<Songs key={s._id} onClick={() => `/${s.slug}`}>
+						<Img src={s?.photo?.url} alt="song Photo" />
+						<Details>
+							<Name>{s.name}</Name>
+							<Artist>{s.artist}</Artist>
+						</Details>
+					</Songs>
+				))}
 			</SongsContainer>
 		</Container>
 	);

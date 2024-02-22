@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { Modal } from "antd";
 
-const ForgotPassword = ({ showResetForm, setShowResetForm }) => {
+const ForgotPassword = ({ showResetForm, setShowResetForm, setLogin }) => {
 	const [email, SetEmail] = useState();
 	const [answer, setAnswer] = useState();
 	const [newPassword, setNewPassword] = useState();
@@ -28,40 +29,51 @@ const ForgotPassword = ({ showResetForm, setShowResetForm }) => {
 		} catch (error) {}
 	};
 	return (
-		<ForgotPasswordContainer>
-			<ResetHeader>Reset Password</ResetHeader>
-			<Form onSubmit={handleReset}>
-				<Section>
-					<L htmlFor="email">Email</L>
-					<Input
-						type="email"
-						required
-						placeholder="Enter email"
-						onChange={(e) => SetEmail(e.target.value)}
-					></Input>
-				</Section>
-				<Section>
-					<L htmlFor="question">What is your favourite song?</L>
-					<Input
-						className="form-control"
-						type="text"
-						required
-						placeholder="Enter your answer"
-						onChange={(e) => setAnswer(e.target.value)}
-					></Input>
-				</Section>
-				<Section>
-					<L htmlFor="newPassword">New Password</L>
-					<Input
-						type="text"
-						required
-						placeholder="Enter your new password"
-						onChange={(e) => setNewPassword(e.target.value)}
-					></Input>
-				</Section>
-				<Button type="submit">Reset</Button>
-			</Form>
-		</ForgotPasswordContainer>
+		<Modal
+			centered
+			open={showResetForm}
+			onCancel={() => {
+				setLogin(true);
+				setShowResetForm(!showResetForm);
+			}}
+			footer={null}
+			width={300}
+		>
+			<ForgotPasswordContainer>
+				<ResetHeader>Reset Password</ResetHeader>
+				<Form onSubmit={handleReset}>
+					<Section>
+						<L htmlFor="email">Email</L>
+						<Input
+							type="email"
+							required
+							placeholder="Enter email"
+							onChange={(e) => SetEmail(e.target.value)}
+						></Input>
+					</Section>
+					<Section>
+						<L htmlFor="question">What is your favourite song?</L>
+						<Input
+							className="form-control"
+							type="text"
+							required
+							placeholder="Enter your answer"
+							onChange={(e) => setAnswer(e.target.value)}
+						></Input>
+					</Section>
+					<Section>
+						<L htmlFor="newPassword">New Password</L>
+						<Input
+							type="text"
+							required
+							placeholder="Enter your new password"
+							onChange={(e) => setNewPassword(e.target.value)}
+						></Input>
+					</Section>
+					<Button type="submit">Reset</Button>
+				</Form>
+			</ForgotPasswordContainer>
+		</Modal>
 	);
 };
 

@@ -1,6 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import banner from "../images/banner.png";
-import play from "../music/New_famous_English_songs-mc.m4a";
+import { useParams } from "react-router-dom";
 import { IoPlay } from "react-icons/io5";
 import { IoIosPause } from "react-icons/io";
 import { FaForward } from "react-icons/fa6";
@@ -8,6 +8,9 @@ import { FaBackward } from "react-icons/fa6";
 import { HiSpeakerWave } from "react-icons/hi2";
 import { HiSpeakerXMark } from "react-icons/hi2";
 import styled from "styled-components";
+import axios from "axios";
+import { useAllSongs } from "../../context/SongsProvider";
+import { useUpSongs } from "../../context/upcomingSongsProvider";
 
 const MPlayer = styled.div`
 	display: flex;
@@ -76,7 +79,7 @@ const Duration = styled.label`
 	font-size: 14px;
 `;
 const ProgressBar = styled.div`
-	height: 5px;
+	height: 7px;
 	background-color: rgb(130, 133, 135);
 	width: 90%;
 	border-radius: 30px;
@@ -142,6 +145,17 @@ const MusicPlayer = () => {
 	const [vLevel, setVLevel] = useState();
 	const clickRef = useRef();
 	const volRef = useRef();
+	const params = useParams();
+	const [songs, setSongs] = useAllSongs();
+	const [songsListArray, setSongsListArray] = useState([]);
+	const [playingSong, setPlayingSong] = useState({
+		title: "",
+		artist: "",
+		current: [],
+		url: "",
+	});
+	const [upsongs, setUpSongs] = useUpSongs();
+	const [songindex, setSongIndex] = useState();
 
 	const PlayPause = () => {
 		if (!isPlaying) {
@@ -195,15 +209,212 @@ const MusicPlayer = () => {
 		setVLevel(divprogress);
 		AudioEle.current.volume = divprogress / 100;
 	};
+
+	//get all songs
+	const GetAllSongs = async () => {
+		// Assuming songs is an array of promises
+		if (songs?.songs) {
+			const updatedSongsListArray = await Promise.all(songs?.songs);
+			// Set the new array to the state
+			setSongsListArray(updatedSongsListArray);
+		}
+	};
+
+	const SetPlayingSong = async () => {
+		// Assuming songs is an array of promises
+		if (songsListArray.length !== 0) {
+			// Set the new array to the state
+			setPlayingSong({
+				title: songsListArray[0].name,
+				artist: songsListArray[0].artist,
+				current: songsListArray[0].music.url,
+				url: songsListArray[0].photo.url,
+			});
+		}
+	};
+
+	const SetUpComingSong = async () => {
+		const filtered = songsListArray.filter(
+			(list) => list?.music?.url !== playingSong.current
+		);
+		setUpSongs(filtered);
+		localStorage.removeItem("UpComingSongs");
+		localStorage.setItem("UpComingSongs", JSON.stringify(filtered));
+	};
+
+	//lifecycle method
+	useEffect(() => {
+		GetAllSongs();
+	}, [songs]);
+	useEffect(() => {
+		SetUpComingSong();
+	}, [playingSong]);
+	useEffect(() => {
+		SetPlayingSong();
+	}, [songsListArray]);
+
+	//initalp details
+	// useEffect(() => {
+	// 	if (params?.slug) getSong();
+	// }, [params?.slug]);
+
+	//get single Recipe
+	// const getSong = async () => {
+	// 	try {
+	// 		const { data } = await axios.get(
+	// 			`${process.env.REACT_APP_API_BASE_URL}/api/v1/music/get-music/${params.slug}`
+	// 		);
+	// 		console.log(data);
+	// 		setSong(data?.music);
+	// 		// getSimilarRecipe(data?.music._id, data?.music?.playlist._id);
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// };
+
+	const skipBack = () => {
+		const index = songsListArray.findIndex((x) => x.name === playingSong.title);
+
+		if (index === 0) {
+			setPlayingSong({
+				title: songsListArray[songsListArray.length - 1].name,
+				artist: songsListArray[songsListArray.length - 1].artist,
+				current: songsListArray[songsListArray.length - 1].music.url,
+				url: songsListArray[songsListArray.length - 1].photo.url,
+			});
+		} else {
+			setPlayingSong({
+				title: songsListArray[index - 1].name,
+				artist: songsListArray[index - 1].artist,
+				current: songsListArray[index - 1].music.url,
+				url: songsListArray[index - 1].photo.url,
+			});
+		}
+		AudioEle.current.currentTime = 0;
+		// Add event listener for loadedmetadata
+		AudioEle.current.addEventListener("loadedmetadata", () => {
+			AudioEle.current.play(); // Start playing the next song
+			setIsPlaying(true);
+		});
+	};
+
+	const skiptoNext = () => {
+		const index = songsListArray.findIndex((x) => x.name === playingSong.title);
+		localStorage.setItem("lastPlayedSongIndex", index);
+		let nextIndex = index + 1;
+		if (nextIndex >= songsListArray.length) {
+			nextIndex = 0; // Wrap around to the first song if we're at the end
+		}
+
+		const nextSong = songsListArray[nextIndex];
+
+		setPlayingSong({
+			title: nextSong.name,
+			artist: nextSong.artist,
+			current: nextSong.music.url,
+			url: nextSong.photo.url,
+		});
+
+		AudioEle.current.currentTime = 0;
+
+		// Add event listener for loadedmetadata
+		AudioEle.current.addEventListener("loadedmetadata", () => {
+			AudioEle.current.play(); // Start playing the next song
+			setIsPlaying(true);
+		});
+	};
+	const onEnded = () => {
+		skiptoNext();
+	};
+
+	// Add event listener for ended
+	useEffect(() => {
+		if (AudioEle.current) {
+			AudioEle.current.addEventListener("ended", onEnded);
+		}
+
+		// Clean up event listener on unmount
+		return () => {
+			if (AudioEle.current) {
+				AudioEle.current.removeEventListener("ended", onEnded);
+			}
+		};
+	}, [playingSong]);
+
+	// Function to save last played song details to local storage
+	const saveLastPlayedSong = () => {
+		localStorage.setItem(
+			"lastPlayedSongProgress",
+			AudioEle.current.currentTime
+		);
+	};
+
+	// Function to play the last played song
+	const playLastPlayedSong = () => {
+		const lastPlayedSongIndex = localStorage.getItem("lastPlayedSongIndex");
+		const lastPlayedSongProgress = localStorage.getItem(
+			"lastPlayedSongProgress"
+		);
+
+		if (lastPlayedSongIndex !== null && lastPlayedSongProgress !== null) {
+			const index = parseInt(lastPlayedSongIndex);
+			const progress = parseFloat(lastPlayedSongProgress);
+
+			if (
+				!isNaN(index) &&
+				!isNaN(progress) &&
+				index >= 0 &&
+				index < songsListArray.length
+			) {
+				const lastPlayedSong = songsListArray[index];
+				setPlayingSong({
+					title: lastPlayedSong.name,
+					artist: lastPlayedSong.artist,
+					current: lastPlayedSong.music.url,
+					url: lastPlayedSong.photo.url,
+				});
+
+				// Wait for the audio element to load metadata
+				AudioEle.current.addEventListener("loadedmetadata", () => {
+					// Set the playback progress
+					AudioEle.current.currentTime = progress;
+
+					// Start playing the audio
+					AudioEle.current.play();
+					setIsPlaying(true);
+				});
+			}
+		}
+	};
+
+	useEffect(() => {
+		playLastPlayedSong();
+
+		// Setup beforeunload event to save last played song details before page reload
+		window.addEventListener("beforeunload", saveLastPlayedSong);
+
+		// Cleanup beforeunload event listener
+		return () => {
+			window.removeEventListener("beforeunload", saveLastPlayedSong);
+		};
+	}, []);
+
 	return (
 		<MPlayer>
-			<Img src={banner}></Img>
+			<Img src={playingSong.url}></Img>
 			<Details>
 				<Title>
-					<Name>Okay Okay Okay</Name>
-					<Artist>Artist</Artist>
+					<Name>{playingSong.title}</Name>
+					<Artist>Song by {playingSong.artist}</Artist>
 				</Title>
-				<Audio ref={AudioEle} src={play} onTimeUpdate={onPlaying}></Audio>
+				{playingSong.current && (
+					<Audio
+						ref={AudioEle}
+						src={playingSong.current}
+						onTimeUpdate={onPlaying}
+					></Audio>
+				)}
+
 				<Controller>
 					<ProgressBarController>
 						<ProgressLabelContainer>
@@ -215,7 +426,7 @@ const MusicPlayer = () => {
 						</ProgressBar>
 					</ProgressBarController>
 					<ButtonsController>
-						<FaBackward className="Controllers" size={25} />
+						<FaBackward className="Controllers" size={25} onClick={skipBack} />
 						{isPlaying && (
 							<IoIosPause
 								className="Controllers"
@@ -230,7 +441,7 @@ const MusicPlayer = () => {
 								onClick={() => PlayPause()}
 							/>
 						)}
-						<FaForward className="Controllers" size={25} />
+						<FaForward className="Controllers" size={25} onClick={skiptoNext} />
 						<VolumeController>
 							<VolumeBar
 								className="Controllers"

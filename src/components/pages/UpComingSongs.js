@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PiMusicNoteFill } from "react-icons/pi";
 import { IoArrowForwardOutline } from "react-icons/io5";
 import styled from "styled-components";
+import { useAllSongs } from "../../context/SongsProvider";
+import { useUpSongs } from "../../context/upcomingSongsProvider";
 
 const UpComing = styled.div`
 	display: flex;
@@ -54,15 +56,17 @@ const ContainerInner = styled.div`
 	}
 `;
 
-const PlayList = styled.div`
+const Song = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: start;
 	gap: 10px;
 `;
-const Img = styled.div`
-	border: 1px solid #fff;
-	padding: 7px 8px 5px;
+const Img = styled.img`
+	border: 1px solid rgb(130, 133, 135);
+	height: 30px;
+	width: 30px;
+	margin-top: 2px;
 	border-radius: 50%;
 `;
 const Name = styled.label`
@@ -81,6 +85,7 @@ const Details = styled.div`
 `;
 
 const UpComingSongs = () => {
+	const [upsongs, setUpSongs] = useUpSongs();
 	return (
 		<UpComing>
 			<Title>
@@ -88,132 +93,15 @@ const UpComingSongs = () => {
 				<IoArrowForwardOutline />
 			</Title>
 			<ContainerInner>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>Shubh</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
-				<PlayList>
-					<Img>
-						<PiMusicNoteFill />
-					</Img>
-					<Details>
-						<Name>aaaaaa</Name>
-						<Artist>fowhfdfed</Artist>
-					</Details>
-				</PlayList>
+				{upsongs?.map((s) => (
+					<Song key={s._id}>
+						<Img src={s?.photo?.url} alt="song Photo" />
+						<Details>
+							<Name>{s.name}</Name>
+							<Artist>{s.artist}</Artist>
+						</Details>
+					</Song>
+				))}
 			</ContainerInner>
 		</UpComing>
 	);
