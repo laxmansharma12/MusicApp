@@ -155,7 +155,6 @@ const MusicPlayer = () => {
 		url: "",
 	});
 	const [upsongs, setUpSongs] = useUpSongs();
-	const [songindex, setSongIndex] = useState();
 
 	const PlayPause = () => {
 		if (!isPlaying) {
@@ -167,6 +166,7 @@ const MusicPlayer = () => {
 	};
 
 	const onPlaying = () => {
+		saveLastPlayedSongIndex();
 		const progress = Math.floor(AudioEle.current.currentTime);
 		const duration = Math.floor(AudioEle.current.duration);
 
@@ -223,13 +223,29 @@ const MusicPlayer = () => {
 	const SetPlayingSong = async () => {
 		// Assuming songs is an array of promises
 		if (songsListArray.length !== 0) {
-			// Set the new array to the state
-			setPlayingSong({
-				title: songsListArray[0].name,
-				artist: songsListArray[0].artist,
-				current: songsListArray[0].music.url,
-				url: songsListArray[0].photo.url,
-			});
+			const lastPlayedSongIndex = localStorage.getItem("lastPlayedSongIndex");
+			const lastPlayedSongProgress = localStorage.getItem(
+				"lastPlayedSongProgress"
+			);
+			console.log(lastPlayedSongProgress);
+			console.log(lastPlayedSongIndex);
+			if (lastPlayedSongProgress >= 0 && lastPlayedSongIndex >= 0) {
+				setPlayingSong({
+					title: songsListArray[lastPlayedSongIndex].name,
+					artist: songsListArray[lastPlayedSongIndex].artist,
+					current: songsListArray[lastPlayedSongIndex].music.url,
+					url: songsListArray[lastPlayedSongIndex].photo.url,
+				});
+
+				AudioEle.current.currentTime = lastPlayedSongProgress;
+			} else {
+				setPlayingSong({
+					title: songsListArray[0].name,
+					artist: songsListArray[0].artist,
+					current: songsListArray[0].music.url,
+					url: songsListArray[0].photo.url,
+				});
+			}
 		}
 	};
 
@@ -300,7 +316,7 @@ const MusicPlayer = () => {
 
 	const skiptoNext = () => {
 		const index = songsListArray.findIndex((x) => x.name === playingSong.title);
-		localStorage.setItem("lastPlayedSongIndex", index);
+
 		let nextIndex = index + 1;
 		if (nextIndex >= songsListArray.length) {
 			nextIndex = 0; // Wrap around to the first song if we're at the end
@@ -324,6 +340,7 @@ const MusicPlayer = () => {
 		});
 	};
 	const onEnded = () => {
+		saveLastPlayedSongIndex();
 		skiptoNext();
 	};
 
@@ -342,60 +359,25 @@ const MusicPlayer = () => {
 	}, [playingSong]);
 
 	// Function to save last played song details to local storage
-	const saveLastPlayedSong = () => {
+	const saveLastPlayedSongIndex = () => {
+		const currentIndex = songsListArray.findIndex(
+			(song) => song.name === playingSong.title
+		);
+		localStorage.setItem("lastPlayedSongIndex", currentIndex);
+	};
+	const saveLastPlayedSongProgress = () => {
 		localStorage.setItem(
 			"lastPlayedSongProgress",
 			AudioEle.current.currentTime
 		);
 	};
-
-	// Function to play the last played song
-	const playLastPlayedSong = () => {
-		const lastPlayedSongIndex = localStorage.getItem("lastPlayedSongIndex");
-		const lastPlayedSongProgress = localStorage.getItem(
-			"lastPlayedSongProgress"
-		);
-
-		if (lastPlayedSongIndex !== null && lastPlayedSongProgress !== null) {
-			const index = parseInt(lastPlayedSongIndex);
-			const progress = parseFloat(lastPlayedSongProgress);
-
-			if (
-				!isNaN(index) &&
-				!isNaN(progress) &&
-				index >= 0 &&
-				index < songsListArray.length
-			) {
-				const lastPlayedSong = songsListArray[index];
-				setPlayingSong({
-					title: lastPlayedSong.name,
-					artist: lastPlayedSong.artist,
-					current: lastPlayedSong.music.url,
-					url: lastPlayedSong.photo.url,
-				});
-
-				// Wait for the audio element to load metadata
-				AudioEle.current.addEventListener("loadedmetadata", () => {
-					// Set the playback progress
-					AudioEle.current.currentTime = progress;
-
-					// Start playing the audio
-					AudioEle.current.play();
-					setIsPlaying(true);
-				});
-			}
-		}
-	};
-
 	useEffect(() => {
-		playLastPlayedSong();
-
 		// Setup beforeunload event to save last played song details before page reload
-		window.addEventListener("beforeunload", saveLastPlayedSong);
+		window.addEventListener("beforeunload", saveLastPlayedSongProgress);
 
 		// Cleanup beforeunload event listener
 		return () => {
-			window.removeEventListener("beforeunload", saveLastPlayedSong);
+			window.removeEventListener("beforeunload", saveLastPlayedSongProgress);
 		};
 	}, []);
 
