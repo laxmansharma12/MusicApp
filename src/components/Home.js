@@ -17,6 +17,9 @@ const LeftContainer = styled.div`
 	position: relative;
 	width: 19.7%;
 	height: 50vh;
+	@media (max-width: 640px) {
+		display: none;
+	}
 `;
 const LeftFixed = styled.div`
 	position: fixed;
@@ -31,6 +34,9 @@ const LeftFixed = styled.div`
 const RightContainer = styled.div`
 	width: 80%;
 	top: 10px;
+	@media (max-width: 640px) {
+		width: 100%;
+	}
 `;
 
 const Home = () => {

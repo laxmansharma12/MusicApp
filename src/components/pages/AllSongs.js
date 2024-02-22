@@ -15,9 +15,12 @@ const Container = styled.div`
 	padding: 10px;
 	margin-bottom: 10px;
 	color: #fff;
+	@media (max-width: 640px) {
+		width: 90%;
+	}
 `;
 const Header = styled.h2`
-	margin-left: 10px;
+	margin: 0 0 15px 10px;
 `;
 
 const SongsContainer = styled.div`
@@ -27,6 +30,9 @@ const SongsContainer = styled.div`
 	flex-wrap: wrap;
 	gap: 10px;
 	width: 100%;
+	@media (max-width: 640px) {
+		justify-content: center;
+	}
 `;
 const Songs = styled.div`
 	display: flex;
@@ -38,6 +44,9 @@ const Songs = styled.div`
 	gap: 10px;
 	height: 150px;
 	width: 150px;
+	@media (max-width: 640px) {
+		width: 147px;
+	}
 `;
 const Img = styled.img`
 	height: 50%;

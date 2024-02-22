@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { PiMusicNoteFill } from "react-icons/pi";
+import React from "react";
 import { IoArrowForwardOutline } from "react-icons/io5";
 import styled from "styled-components";
-import { useAllSongs } from "../../context/SongsProvider";
 import { useUpSongs } from "../../context/upcomingSongsProvider";
 import { useNavigate } from "react-router-dom";
 
@@ -17,6 +15,11 @@ const UpComing = styled.div`
 	border-radius: 10px;
 	width: 20%;
 	color: #fff;
+	@media (max-width: 640px) {
+		width: 95%;
+		gap: 0;
+		height: fit-content;
+	}
 `;
 const Title = styled.div`
 	display: flex;
@@ -54,6 +57,10 @@ const ContainerInner = styled.div`
 
 	&::-webkit-scrollbar-thumb:hover {
 		background-color: #555;
+	}
+	@media (max-width: 640px) {
+		height: 100px;
+		justify-content: start;
 	}
 `;
 

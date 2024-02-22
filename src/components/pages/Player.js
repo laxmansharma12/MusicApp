@@ -19,6 +19,9 @@ const ControllerSection = styled.div`
 	align-items: center;
 	gap: 12px;
 	width: 100%;
+	@media (max-width: 640px) {
+		flex-direction: column;
+	}
 `;
 
 const Player = () => {

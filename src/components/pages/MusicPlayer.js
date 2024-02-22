@@ -20,6 +20,11 @@ const MPlayer = styled.div`
 	height: 280px;
 	border-radius: 10px;
 	width: 77%;
+	@media (max-width: 640px) {
+		flex-direction: column;
+		width: 95%;
+		height: fit-content;
+	}
 `;
 
 const Img = styled.img`
@@ -27,6 +32,10 @@ const Img = styled.img`
 	border-radius: 10px;
 	object-fit: cover;
 	width: 35%;
+	@media (max-width: 640px) {
+		width: 100%;
+		height: 200px;
+	}
 `;
 const Details = styled.div`
 	display: flex;
@@ -35,6 +44,10 @@ const Details = styled.div`
 	flex-direction: column;
 	height: 100%;
 	width: 65%;
+	@media (max-width: 640px) {
+		width: 100%;
+		height: 200px;
+	}
 `;
 
 const Title = styled.div`
@@ -43,10 +56,18 @@ const Title = styled.div`
 
 const Name = styled.h1`
 	margin-bottom: 0;
+	@media (max-width: 640px) {
+		margin-top: 5px;
+		font-size: 28px;
+	}
 `;
 const Artist = styled.h4`
 	color: rgb(130, 133, 135);
 	margin-top: 10px;
+	@media (max-width: 640px) {
+		margin-top: 5px;
+		font-size: 15px;
+	}
 `;
 const Audio = styled.audio``;
 const Controller = styled.div`
@@ -114,6 +135,9 @@ const VolumeController = styled.div`
 	align-items: center;
 	gap: 10px;
 	left: 78%;
+	@media (max-width: 640px) {
+		left: 90%;
+	}
 `;
 const VolumeBar = styled.div`
 	height: 4px;
@@ -123,6 +147,9 @@ const VolumeBar = styled.div`
 	cursor: pointer;
 	&:hover {
 		height: 5px;
+	}
+	@media (max-width: 640px) {
+		display: none;
 	}
 `;
 

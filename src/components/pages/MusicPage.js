@@ -11,6 +11,9 @@ const Container = styled.div`
 	gap: 10px;
 	background-color: #121212;
 	border-radius: 10px;
+	@media (max-width: 640px) {
+		width: 100%;
+	}
 `;
 const Nav = styled.div`
 	position: relative;
@@ -19,6 +22,9 @@ const Nav = styled.div`
 	position: sticky;
 	position: -webkit-sticky;
 	top: 0px;
+	@media (max-width: 640px) {
+		display: none;
+	}
 `;
 const MusicPage = () => {
 	return (
