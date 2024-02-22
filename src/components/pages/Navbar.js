@@ -5,6 +5,8 @@ import Login from "../form/Login";
 import Register from "../form/Register";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/authProvider";
+import { IoMdCloudUpload } from "react-icons/io";
+import SongUpload from "../form/SongUpload";
 
 const Nav = styled.div`
 	height: 60px;
@@ -25,9 +27,6 @@ const ButtonContainer = styled.div`
 	gap: 10px;
 	margin-right: 10px;
 	align-items: center;
-	@media screen and (max-width: 1120px) {
-		display: none;
-	}
 `;
 
 const LoginButton = styled.a`
@@ -86,10 +85,31 @@ const LogoutButton = styled.button`
 	}
 `;
 
+const UpdBtn = styled.button`
+	background-color: rgb(12, 178, 12);
+	border: none;
+	border-radius: 20px;
+	color: #fff;
+	cursor: pointer;
+	padding: 5px 13px;
+	transition: all 0.2s ease-in-out;
+	&:hover {
+		background-color: rgb(20, 229, 20);
+	}
+	@media screen and (max-width: 768px) {
+		font-size: 18px;
+	}
+`;
+
+const H1 = styled.h1`
+	margin-left: 10px;
+`;
+
 const Navbar = () => {
 	const [auth, setAuth] = useAuth();
 	const [login, setLogin] = useState(false);
 	const [signup, setSignup] = useState(false);
+	const [upload, setUpload] = useState(false);
 
 	const HandleLogout = () => {
 		setAuth({
@@ -102,6 +122,7 @@ const Navbar = () => {
 	};
 	return (
 		<Nav>
+			<H1>Music</H1>
 			<SearchInput />
 			<ButtonContainer>
 				{!auth.user ? (
@@ -128,7 +149,13 @@ const Navbar = () => {
 						)}
 					</>
 				) : (
-					<LogoutButton onClick={() => HandleLogout()}>Logout</LogoutButton>
+					<>
+						<UpdBtn>
+							<IoMdCloudUpload onClick={() => setUpload(!upload)} />
+						</UpdBtn>
+						{upload && <SongUpload upload={upload} setUpload={setUpload} />}
+						<LogoutButton onClick={() => HandleLogout()}>Logout</LogoutButton>
+					</>
 				)}
 			</ButtonContainer>
 		</Nav>

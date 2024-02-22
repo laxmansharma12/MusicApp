@@ -23,7 +23,6 @@ const Nav = styled.div`
 	position: -webkit-sticky;
 	top: 0px;
 	@media (max-width: 640px) {
-		display: none;
 	}
 `;
 const MusicPage = () => {
