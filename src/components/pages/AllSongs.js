@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAllSongs } from "../../context/SongsProvider";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
 	display: flex;
@@ -65,6 +66,8 @@ const Details = styled.div`
 const AllSongs = () => {
 	const [songs, setSongs] = useAllSongs();
 	const [songsListArray, setSongsListArray] = useState([]);
+	const navigate = useNavigate();
+
 	//get all recipes
 	const GetAllSongs = async () => {
 		const updatedRecipesListArray = songs?.songs;
@@ -82,7 +85,7 @@ const AllSongs = () => {
 			<Header>All Songs</Header>
 			<SongsContainer>
 				{songsListArray?.map((s) => (
-					<Songs key={s._id} onClick={() => `/${s.slug}`}>
+					<Songs key={s._id} onClick={() => navigate(`/${s.slug}`)}>
 						<Img src={s?.photo?.url} alt="song Photo" />
 						<Details>
 							<Name>{s.name}</Name>

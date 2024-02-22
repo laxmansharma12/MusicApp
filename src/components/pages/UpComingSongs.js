@@ -4,6 +4,7 @@ import { IoArrowForwardOutline } from "react-icons/io5";
 import styled from "styled-components";
 import { useAllSongs } from "../../context/SongsProvider";
 import { useUpSongs } from "../../context/upcomingSongsProvider";
+import { useNavigate } from "react-router-dom";
 
 const UpComing = styled.div`
 	display: flex;
@@ -86,6 +87,7 @@ const Details = styled.div`
 
 const UpComingSongs = () => {
 	const [upsongs, setUpSongs] = useUpSongs();
+	const navigate = useNavigate();
 	return (
 		<UpComing>
 			<Title>
@@ -94,7 +96,7 @@ const UpComingSongs = () => {
 			</Title>
 			<ContainerInner>
 				{upsongs?.map((s) => (
-					<Song key={s._id}>
+					<Song key={s._id} onClick={() => navigate(`/${s.slug}`)}>
 						<Img src={s?.photo?.url} alt="song Photo" />
 						<Details>
 							<Name>{s.name}</Name>

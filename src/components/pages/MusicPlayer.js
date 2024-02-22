@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import banner from "../images/banner.png";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { IoPlay } from "react-icons/io5";
 import { IoIosPause } from "react-icons/io";
 import { FaForward } from "react-icons/fa6";
@@ -8,9 +7,9 @@ import { FaBackward } from "react-icons/fa6";
 import { HiSpeakerWave } from "react-icons/hi2";
 import { HiSpeakerXMark } from "react-icons/hi2";
 import styled from "styled-components";
-import axios from "axios";
 import { useAllSongs } from "../../context/SongsProvider";
 import { useUpSongs } from "../../context/upcomingSongsProvider";
+import axios from "axios";
 
 const MPlayer = styled.div`
 	display: flex;
@@ -155,6 +154,8 @@ const MusicPlayer = () => {
 		url: "",
 	});
 	const [upsongs, setUpSongs] = useUpSongs();
+	const [song, setSong] = useState({});
+	const navigate = useNavigate();
 
 	const PlayPause = () => {
 		if (!isPlaying) {
@@ -227,17 +228,51 @@ const MusicPlayer = () => {
 			const lastPlayedSongProgress = localStorage.getItem(
 				"lastPlayedSongProgress"
 			);
-			console.log(lastPlayedSongProgress);
-			console.log(lastPlayedSongIndex);
-			if (lastPlayedSongProgress >= 0 && lastPlayedSongIndex >= 0) {
+			if (lastPlayedSongProgress >= 0 && lastPlayedSongIndex >= 0 && !song) {
 				setPlayingSong({
 					title: songsListArray[lastPlayedSongIndex].name,
 					artist: songsListArray[lastPlayedSongIndex].artist,
 					current: songsListArray[lastPlayedSongIndex].music.url,
 					url: songsListArray[lastPlayedSongIndex].photo.url,
 				});
-
 				AudioEle.current.currentTime = lastPlayedSongProgress;
+			}
+			if (song) {
+				if (lastPlayedSongProgress >= 0 && lastPlayedSongIndex >= 0) {
+					setPlayingSong({
+						title: songsListArray[lastPlayedSongIndex].name,
+						artist: songsListArray[lastPlayedSongIndex].artist,
+						current: songsListArray[lastPlayedSongIndex].music.url,
+						url: songsListArray[lastPlayedSongIndex].photo.url,
+					});
+					AudioEle.current.currentTime = lastPlayedSongProgress;
+				} else {
+					if (lastPlayedSongProgress >= 0 && lastPlayedSongIndex >= 0) {
+						setPlayingSong({
+							title: songsListArray[lastPlayedSongIndex].name,
+							artist: songsListArray[lastPlayedSongIndex].artist,
+							current: songsListArray[lastPlayedSongIndex].music.url,
+							url: songsListArray[lastPlayedSongIndex].photo.url,
+						});
+						AudioEle.current.currentTime = lastPlayedSongProgress;
+					} else {
+						setPlayingSong({
+							title: song?.name,
+							artist: song?.artist,
+							current: song?.music?.url,
+							url: song?.photo?.url,
+						});
+						AudioEle.current.currentTime = 0;
+						// Add event listener for loadedmetadata
+						AudioEle.current.addEventListener("loadedmetadata", () => {
+							if (isPlaying) {
+								AudioEle.current.play();
+								setIsPlaying(true);
+								navigate("/");
+							}
+						});
+					}
+				}
 			} else {
 				setPlayingSong({
 					title: songsListArray[0].name,
@@ -248,7 +283,6 @@ const MusicPlayer = () => {
 			}
 		}
 	};
-
 	const SetUpComingSong = async () => {
 		const filtered = songsListArray.filter(
 			(list) => list?.music?.url !== playingSong.current
@@ -267,26 +301,25 @@ const MusicPlayer = () => {
 	}, [playingSong]);
 	useEffect(() => {
 		SetPlayingSong();
-	}, [songsListArray]);
+	}, [songsListArray, song?.music]);
 
-	//initalp details
-	// useEffect(() => {
-	// 	if (params?.slug) getSong();
-	// }, [params?.slug]);
+	//inital details
+	useEffect(() => {
+		if (params?.slug) getSong();
+	}, [params?.slug]);
 
 	//get single Recipe
-	// const getSong = async () => {
-	// 	try {
-	// 		const { data } = await axios.get(
-	// 			`${process.env.REACT_APP_API_BASE_URL}/api/v1/music/get-music/${params.slug}`
-	// 		);
-	// 		console.log(data);
-	// 		setSong(data?.music);
-	// 		// getSimilarRecipe(data?.music._id, data?.music?.playlist._id);
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 	}
-	// };
+	const getSong = async () => {
+		try {
+			const { data } = await axios.get(
+				`${process.env.REACT_APP_API_BASE_URL}/api/v1/music/get-music/${params.slug}`
+			);
+			setSong(data?.music);
+			// getSimilarRecipe(data?.music._id, data?.music?.playlist._id);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	const skipBack = () => {
 		const index = songsListArray.findIndex((x) => x.name === playingSong.title);
@@ -372,6 +405,8 @@ const MusicPlayer = () => {
 		);
 	};
 	useEffect(() => {
+		navigate("/");
+		setSong("");
 		// Setup beforeunload event to save last played song details before page reload
 		window.addEventListener("beforeunload", saveLastPlayedSongProgress);
 
