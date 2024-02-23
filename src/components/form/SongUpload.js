@@ -109,6 +109,11 @@ const Section = styled.div`
 	padding-bottom: 15px;
 	display: flex;
 	flex-direction: column;
+	.warning {
+		font-size: small;
+		color: red;
+		padding-bottom: 0;
+	}
 	.select-playlist {
 		border: 1px solid rgb(66, 64, 64);
 		border-radius: 5px;
@@ -206,7 +211,6 @@ const SongUpload = ({ upload, setUpload }) => {
 	const [music, setMusic] = useState("");
 	const [artist, setArtist] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [defaultDP, setDefaultDP] = useState(musicPhoto);
 
 	//get all playlist
 	const getAllPlaylists = async () => {
@@ -339,6 +343,7 @@ const SongUpload = ({ upload, setUpload }) => {
 										required
 									></MusicInput>
 								</SongContainer>
+								<L className="warning">Size: less than 4.5mb*</L>
 							</Section>
 							<Section>
 								<L htmlFor="song-name">Song Name</L>

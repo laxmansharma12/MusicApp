@@ -5,6 +5,7 @@ import { CiImageOn } from "react-icons/ci";
 import axios from "axios";
 import toast from "react-hot-toast";
 import SyncLoader from "react-spinners/SyncLoader";
+import musicFolderPhoto from "../images/musicFolder.png";
 
 const Container = styled.div`
 	display: flex;
@@ -61,7 +62,6 @@ const PhotoControll = styled.div`
 const Img = styled.img`
 	padding: 0px 10px 0 10px;
 	height: 150px;
-	object-fit: cover;
 	border-radius: 8%;
 	width: 200px;
 	@media (max-width: 640px) {
@@ -178,7 +178,20 @@ const PlaylistUpload = ({ showCreatePlaylist, setShowCreatePlaylist }) => {
 			setIsSubmitting(true);
 			const PlaylistData = new FormData();
 			PlaylistData.append("name", name);
-			PlaylistData.append("photo", photo);
+			if (!photo) {
+				// Convert the default musicFolderPhoto into a File object
+				const defaultPhotoBlob = await fetch(musicFolderPhoto).then((res) =>
+					res.blob()
+				);
+				const defaultPhotoFile = new File(
+					[defaultPhotoBlob],
+					"musicFolderPhoto.png"
+				);
+
+				PlaylistData.append("photo", defaultPhotoFile);
+			} else {
+				PlaylistData.append("photo", photo);
+			}
 			const { data } = await axios.post(
 				`${process.env.REACT_APP_API_BASE_URL}/api/v1/playlist/create-playlist`,
 				PlaylistData
