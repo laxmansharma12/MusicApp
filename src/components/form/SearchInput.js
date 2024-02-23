@@ -1,47 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 // import { useSearch } from "../../context/searchProvider";
 // import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+// import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { IoIosSearch } from "react-icons/io";
 
 export const SearchInput = () => {
-	const [values, setValues] = useState(0);
-	const location = useLocation();
-	const navigate = useNavigate();
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		// try {
-		// 	const { data } = await axios.get(
-		// 		`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/search/${values.keyword}`
-		// 	);
-		// 	setValues({ ...values, results: data });
-		// 	navigate("/search");
-		// } catch (error) {
-		// 	console.log(error);
-		// }
-	};
+	// const [values, setValues] = useState(0);
+	// const location = useLocation();
+	// const navigate = useNavigate();
+	// const handleSubmit = async (e) => {
+	// 	e.preventDefault();
+	// 	try {
+	// 		const { data } = await axios.get(
+	// 			`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/search/${values.keyword}`
+	// 		);
+	// 		setValues({ ...values, results: data });
+	// 		navigate("/search");
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// };
 
-	const ResetVlaues = () => {
-		if (location.pathname !== "/search")
-			setValues({ ...values, keyword: "", results: [] });
-	};
+	// const ResetVlaues = () => {
+	// 	if (location.pathname !== "/search")
+	// 		setValues({ ...values, keyword: "", results: [] });
+	// };
 
-	useEffect(() => {
-		ResetVlaues();
-	}, [location]);
+	// useEffect(() => {
+	// 	ResetVlaues();
+	// }, [location]);
 
 	return (
 		<Div>
-			<Form role="search" onSubmit={handleSubmit}>
+			<Form role="search">
 				<IoIosSearch size={16} />
 				<Input
 					className="custom-input"
 					type="search"
 					placeholder="Search..."
 					aria-label="Search"
-					value={values.keyword}
-					onChange={(e) => setValues({ ...values, keyword: e.target.value })}
+					// value={values.keyword}
+					// onChange={(e) => setValues({ ...values, keyword: e.target.value })}
 				/>
 			</Form>
 		</Div>
