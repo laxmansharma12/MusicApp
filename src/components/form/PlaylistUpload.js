@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { CiImageOn } from "react-icons/ci";
 import axios from "axios";
 import toast from "react-hot-toast";
+import SyncLoader from "react-spinners/SyncLoader";
 
 const Container = styled.div`
 	display: flex;
@@ -134,14 +135,47 @@ const Btn = styled.button`
 	}
 `;
 
+const Loader = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	height: 650px;
+	width: 303px;
+	color: #000;
+	z-index: 1;
+	animation: dissolveIn 1s ease-in-out;
+	@media (max-width: 640px) {
+		width: 95%;
+	}
+	@keyframes dissolveIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+`;
+const H2 = styled.h2`
+	margin: 0;
+	padding: 0;
+`;
+const P = styled.p`
+	margin: 0 0 15px 0;
+	padding-top: 0px;
+`;
+
 const PlaylistUpload = ({ showCreatePlaylist, setShowCreatePlaylist }) => {
 	const [name, SetName] = useState("");
 	const [photo, setPhoto] = useState("");
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	//add playlist
 	const handleCreate = async (e) => {
 		e.preventDefault();
 		try {
+			setIsSubmitting(true);
 			const PlaylistData = new FormData();
 			PlaylistData.append("name", name);
 			PlaylistData.append("photo", photo);
@@ -152,6 +186,7 @@ const PlaylistUpload = ({ showCreatePlaylist, setShowCreatePlaylist }) => {
 			if (data) {
 				toast.success(data.message);
 				setShowCreatePlaylist(!showCreatePlaylist);
+				setIsSubmitting(false);
 				window.location.reload();
 			} else {
 				toast.error(data.message);
@@ -168,67 +203,78 @@ const PlaylistUpload = ({ showCreatePlaylist, setShowCreatePlaylist }) => {
 			footer={null}
 			width={300}
 		>
-			<Container>
-				<Header>Add Playlist</Header>
-				<PhotoControll>
-					{photo ? (
-						<>
-							{photo && photo.size < 1000000 ? (
-								<>
-									<Img
-										src={URL.createObjectURL(photo)}
-										alt="playlist Photo"
-									></Img>
-									<ImgRemoveBtn onClick={() => setPhoto("")}>
-										Remove Image
-									</ImgRemoveBtn>
-								</>
-							) : (
-								<ImgContainer style={{ borderColor: "brown" }}>
-									<CiImageOn className="fileIcon" />
-									<br></br>
-									<L>Click to upload Photo</L>
-									<L style={{ color: "brown" }}>Size is more than 1mb</L>
-									<ImgInput
-										type="file"
-										name="photo"
-										accept="image/*"
-										onChange={(e) => setPhoto(e.target.files[0])}
-										hidden
-									></ImgInput>
-								</ImgContainer>
-							)}
-						</>
-					) : (
-						<ImgContainer>
-							<CiImageOn className="fileIcon" />
-							<br></br>
-							<L>Click to upload Photo</L>
-							<L style={{ fontSize: "12px" }}>*Size: less than 1mb required</L>
-							<ImgInput
-								type="file"
-								name="photo"
-								accept="image/*"
-								onChange={(e) => setPhoto(e.target.files[0])}
-								hidden
-							></ImgInput>
-						</ImgContainer>
-					)}
-				</PhotoControll>
-				<Form onSubmit={handleCreate}>
-					<Section>
-						<L htmlFor="song-name">Playlist Name</L>
-						<Input
-							type="text"
-							value={name}
-							onChange={(e) => SetName(e.target.value)}
-							placeholder="Enter Playlist Name"
-							required
-						></Input>
-					</Section>
-					<Btn type="submit">Create</Btn>
-				</Form>
-			</Container>
+			{!isSubmitting && (
+				<Container>
+					<Header>Add Playlist</Header>
+					<PhotoControll>
+						{photo ? (
+							<>
+								{photo && photo.size < 1000000 ? (
+									<>
+										<Img
+											src={URL.createObjectURL(photo)}
+											alt="playlist Photo"
+										></Img>
+										<ImgRemoveBtn onClick={() => setPhoto("")}>
+											Remove Image
+										</ImgRemoveBtn>
+									</>
+								) : (
+									<ImgContainer style={{ borderColor: "brown" }}>
+										<CiImageOn className="fileIcon" />
+										<br></br>
+										<L>Click to upload Photo</L>
+										<L style={{ color: "brown" }}>Size is more than 1mb</L>
+										<ImgInput
+											type="file"
+											name="photo"
+											accept="image/*"
+											onChange={(e) => setPhoto(e.target.files[0])}
+											hidden
+										></ImgInput>
+									</ImgContainer>
+								)}
+							</>
+						) : (
+							<ImgContainer>
+								<CiImageOn className="fileIcon" />
+								<br></br>
+								<L>Click to upload Photo</L>
+								<L style={{ fontSize: "12px" }}>
+									*Size: less than 1mb required
+								</L>
+								<ImgInput
+									type="file"
+									name="photo"
+									accept="image/*"
+									onChange={(e) => setPhoto(e.target.files[0])}
+									hidden
+								></ImgInput>
+							</ImgContainer>
+						)}
+					</PhotoControll>
+					<Form onSubmit={handleCreate}>
+						<Section>
+							<L htmlFor="song-name">Playlist Name</L>
+							<Input
+								type="text"
+								value={name}
+								onChange={(e) => SetName(e.target.value)}
+								placeholder="Enter Playlist Name"
+								required
+							></Input>
+						</Section>
+						<Btn type="submit">Create</Btn>
+					</Form>
+				</Container>
+			)}
+			{isSubmitting && (
+				<Loader>
+					<H2>Hold on a moment...</H2>
+					<P>We're adding your playlist.</P>
+					<SyncLoader color="#000" />
+				</Loader>
+			)}
 		</Modal>
 	);
 };
