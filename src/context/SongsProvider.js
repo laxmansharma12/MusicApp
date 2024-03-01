@@ -23,7 +23,7 @@ const SongsProvider = ({ children }) => {
 						...songs,
 						songs: data.songs,
 					});
-					localStorage.setItem("Songs", JSON.stringify(data));
+					localStorage.setItem("Songs", JSON.stringify(data.songs));
 				}
 			}
 		} catch (error) {

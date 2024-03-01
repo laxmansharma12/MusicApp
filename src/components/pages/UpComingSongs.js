@@ -35,11 +35,11 @@ const Label = styled.label``;
 
 const ContainerInner = styled.div`
 	display: flex;
-	justify-content: center;
+	justify-content: start;
 	align-items: start;
 	flex-direction: column;
 	gap: 13px;
-	width: 85%;
+	padding-right: 1px;
 	height: 200px;
 	margin-left: 15px;
 	overflow-y: hidden;
@@ -67,15 +67,15 @@ const ContainerInner = styled.div`
 const Song = styled.div`
 	display: flex;
 	justify-content: space-between;
-	align-items: start;
+	align-items: center;
 	gap: 10px;
 `;
 const Img = styled.img`
 	border: 1px solid rgb(130, 133, 135);
-	height: 30px;
-	width: 30px;
+	height: 40px;
+	width: 40px;
 	margin-top: 2px;
-	border-radius: 50%;
+	/* border-radius: 50%; */
 `;
 const Name = styled.label`
 	font-weight: bold;

@@ -28,10 +28,12 @@ const SongsContainer = styled.div`
 	justify-content: start;
 	align-items: center;
 	flex-wrap: wrap;
+	padding-left: 8px;
 	gap: 10px;
 	width: 100%;
 	@media (max-width: 640px) {
 		justify-content: center;
+		padding: 0;
 	}
 `;
 const Songs = styled.div`
@@ -42,8 +44,8 @@ const Songs = styled.div`
 	background-color: #000;
 	border-radius: 10px;
 	gap: 10px;
-	height: 150px;
-	width: 150px;
+	height: 155px;
+	width: 155px;
 	@media (max-width: 640px) {
 		width: 147px;
 	}
@@ -51,6 +53,7 @@ const Songs = styled.div`
 const Img = styled.img`
 	height: 50%;
 	width: 90%;
+	object-fit: fill;
 	border-top-right-radius: 15%;
 	border-top-left-radius: 15%;
 	padding: 7px 8px 5px;
@@ -98,7 +101,7 @@ const AllSongs = () => {
 						<Img src={s?.photo?.url} alt="song Photo" />
 						<Details>
 							<Name>{s.name}</Name>
-							<Artist>{s.artist}</Artist>
+							<Artist>{s.artist.substring(0, 20)}...</Artist>
 						</Details>
 					</Songs>
 				))}

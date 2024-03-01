@@ -99,6 +99,9 @@ const UpdBtn = styled.button`
 	@media screen and (max-width: 768px) {
 		font-size: 18px;
 	}
+	@media screen and (min-width: 640px) {
+		display: none;
+	}
 `;
 
 const H1 = styled.h1`
