@@ -112,6 +112,7 @@ const ButtonsController = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	margin-top: 0.5rem;
 	flex-direction: row;
 	gap: 20px;
 	width: 100%;
