@@ -109,7 +109,6 @@ const SeekBar = styled.div`
 	border-radius: 30px;
 `;
 const ButtonsController = styled.div`
-	position: relative;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -132,9 +131,9 @@ const VolumeController = styled.div`
 	justify-content: center;
 	align-items: center;
 	gap: 10px;
-	left: 78%;
+	left: 73%;
 	@media (max-width: 640px) {
-		left: 90%;
+		left: 86%;
 	}
 `;
 const VolumeBar = styled.div`
