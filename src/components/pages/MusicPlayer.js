@@ -269,18 +269,22 @@ const MusicPlayer = () => {
 
 	const playSong = (index) => {
 		if (index >= 0 && index < songsListArray.length) {
-			const remainingSongs = songsListArray.slice(index + 1); // Get elements from index + 1 to the end
-			const removedSongs = songsListArray.slice(0, index);
-			const newOrder = remainingSongs.concat(removedSongs); // Concatenate sliced elements with remaining elements
 			setPlayingSong({
 				title: songsListArray[index].name,
 				artist: songsListArray[index].artist,
 				current: songsListArray[index].music.url,
 				url: songsListArray[index].photo.url,
 			});
-			if (newOrder) {
-				setUpSongs(newOrder);
-			}
+		}
+	};
+
+	const setUpcomingSongs = () => {
+		const index = songsListArray.findIndex((x) => x.name === playingSong.title);
+		const remainingSongs = songsListArray.slice(index + 1); // Get elements from index + 1 to the end
+		const removedSongs = songsListArray.slice(0, index);
+		const newOrder = remainingSongs.concat(removedSongs); // Concatenate sliced elements with remaining elements
+		if (newOrder) {
+			setUpSongs(newOrder);
 		}
 	};
 
@@ -385,6 +389,9 @@ const MusicPlayer = () => {
 	useEffect(() => {
 		SetPlayingSong();
 	}, [songsListArray]);
+	useEffect(() => {
+		setUpcomingSongs();
+	}, [playingSong]);
 
 	return (
 		<MPlayer>

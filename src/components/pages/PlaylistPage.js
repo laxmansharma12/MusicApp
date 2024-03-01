@@ -4,6 +4,7 @@ import { GiBookshelf } from "react-icons/gi";
 import { FaPlus } from "react-icons/fa6";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useAllSongs } from "../../context/SongsProvider";
 
 const Container = styled.div`
 	display: flex;
@@ -98,6 +99,7 @@ const Details = styled.div`
 
 const PlaylistPage = () => {
 	const [playlists, setPlaylists] = useState([]);
+	const [songs, setSongs] = useAllSongs();
 
 	//get all playlist
 	const getAllPlaylists = async () => {
@@ -113,9 +115,11 @@ const PlaylistPage = () => {
 			toast.error("Something wwent wrong in getting playlist");
 		}
 	};
+
 	useEffect(() => {
 		getAllPlaylists();
 	}, []);
+
 	return (
 		<Container>
 			<Header>
@@ -134,7 +138,9 @@ const PlaylistPage = () => {
 						<Img src={p?.photo?.url} alt="playlist Photo" />
 						<Details>
 							<Name>{p.name}</Name>
-							<Artist>fowhfdfed</Artist>
+							<Artist>
+								{songs?.songs?.filter((x) => x.playlist === p._id).length}
+							</Artist>
 						</Details>
 					</PlayList>
 				))}
