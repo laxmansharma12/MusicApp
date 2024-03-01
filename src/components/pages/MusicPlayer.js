@@ -188,6 +188,7 @@ const MusicPlayer = () => {
 			const updatedSongsListArray = await Promise.all(songs?.songs);
 			// Set the new array to the state
 			setSongsListArray(updatedSongsListArray);
+			setUpSongs(updatedSongsListArray);
 		}
 	};
 
@@ -267,23 +268,20 @@ const MusicPlayer = () => {
 	};
 
 	const playSong = (index) => {
-		if (index >= 0) {
+		if (index >= 0 && index < songsListArray.length) {
+			const remainingSongs = songsListArray.slice(index + 1); // Get elements from index + 1 to the end
+			const removedSongs = songsListArray.slice(0, index);
+			const newOrder = remainingSongs.concat(removedSongs); // Concatenate sliced elements with remaining elements
 			setPlayingSong({
 				title: songsListArray[index].name,
 				artist: songsListArray[index].artist,
 				current: songsListArray[index].music.url,
 				url: songsListArray[index].photo.url,
 			});
+			if (newOrder) {
+				setUpSongs(newOrder);
+			}
 		}
-	};
-
-	const SetUpComingSong = async () => {
-		const filtered = songsListArray.filter(
-			(list) => list?.music?.url !== playingSong.current
-		);
-		setUpSongs(filtered);
-		localStorage.removeItem("UpComingSongs");
-		localStorage.setItem("UpComingSongs", JSON.stringify(filtered));
 	};
 
 	//previous song
@@ -383,9 +381,7 @@ const MusicPlayer = () => {
 	useEffect(() => {
 		GetAllSongs();
 	}, [songs]);
-	useEffect(() => {
-		SetUpComingSong();
-	}, [playingSong]);
+
 	useEffect(() => {
 		SetPlayingSong();
 	}, [songsListArray]);
