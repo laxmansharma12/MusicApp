@@ -75,7 +75,7 @@ const Img = styled.img`
 	height: 40px;
 	width: 40px;
 	margin-top: 2px;
-	/* border-radius: 50%; */
+	border-radius: 10%;
 `;
 const Name = styled.label`
 	font-weight: bold;
