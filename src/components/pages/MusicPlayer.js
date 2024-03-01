@@ -181,6 +181,16 @@ const MusicPlayer = () => {
 	const [upsongs, setUpSongs] = useUpSongs();
 	const navigate = useNavigate();
 
+	//get all songs
+	const GetAllSongs = async () => {
+		// Assuming songs is an array of promises
+		if (songs?.songs) {
+			const updatedSongsListArray = await Promise.all(songs?.songs);
+			// Set the new array to the state
+			setSongsListArray(updatedSongsListArray);
+		}
+	};
+
 	const PlayPause = () => {
 		if (!isPlaying) {
 			AudioEle.current.play();
@@ -191,8 +201,7 @@ const MusicPlayer = () => {
 	};
 
 	const onPlaying = () => {
-		saveLastPlayedSongIndex();
-		saveLastPlayedSongProgress();
+		saveLastPlayedSong();
 		const progress = Math.floor(AudioEle.current.currentTime);
 		const duration = Math.floor(AudioEle.current.duration);
 
@@ -212,6 +221,7 @@ const MusicPlayer = () => {
 			length: duration,
 		});
 	};
+
 	const VolController = () => {
 		if (!isMute) {
 			AudioEle.current.muted = true;
@@ -220,6 +230,7 @@ const MusicPlayer = () => {
 		}
 		setIsMute(!isMute);
 	};
+
 	const checkWidth = (e) => {
 		let width = clickRef.current.clientWidth;
 		const offset = e.nativeEvent.offsetX;
@@ -227,6 +238,7 @@ const MusicPlayer = () => {
 		const divprogress = (offset / width) * 100;
 		AudioEle.current.currentTime = (divprogress / 100) * fill.length;
 	};
+
 	const volContoller = (e) => {
 		let width = volRef.current.clientWidth;
 		const offset = e.nativeEvent.offsetX;
@@ -234,16 +246,6 @@ const MusicPlayer = () => {
 		const divprogress = (offset / width) * 100;
 		setVLevel(divprogress);
 		AudioEle.current.volume = divprogress / 100;
-	};
-
-	//get all songs
-	const GetAllSongs = async () => {
-		// Assuming songs is an array of promises
-		if (songs?.songs) {
-			const updatedSongsListArray = await Promise.all(songs?.songs);
-			// Set the new array to the state
-			setSongsListArray(updatedSongsListArray);
-		}
 	};
 
 	const SetPlayingSong = async () => {
@@ -256,25 +258,15 @@ const MusicPlayer = () => {
 			);
 
 			if (lastPlayedSongIndex !== null && lastPlayedSongProgress !== null) {
-				playLastSong(lastPlayedSongIndex);
+				playSong(lastPlayedSongIndex);
 				AudioEle.current.currentTime = lastPlayedSongProgress;
 			} else {
 				playSong(0);
 			}
 		}
 	};
-	const playSong = (index) => {
-		if (index >= 0) {
-			setPlayingSong({
-				title: songsListArray[index].name,
-				artist: songsListArray[index].artist,
-				current: songsListArray[index].music.url,
-				url: songsListArray[index].photo.url,
-			});
-		}
-	};
 
-	const playLastSong = (index) => {
+	const playSong = (index) => {
 		if (index >= 0) {
 			setPlayingSong({
 				title: songsListArray[index].name,
@@ -294,16 +286,73 @@ const MusicPlayer = () => {
 		localStorage.setItem("UpComingSongs", JSON.stringify(filtered));
 	};
 
-	//lifecycle method
+	//previous song
+	const skipBack = () => {
+		const index = songsListArray.findIndex((x) => x.name === playingSong.title);
+		if (index === 0) {
+			playSong(songsListArray.length - 1);
+		} else {
+			playSong(index - 1);
+		}
+		AudioEle.current.currentTime = 0;
+		// Add event listener for loadedmetadata
+		AudioEle.current.addEventListener("loadedmetadata", () => {
+			AudioEle.current.play(); // Start playing the next song
+			setIsPlaying(true);
+		});
+	};
+
+	//next song
+	const skiptoNext = () => {
+		const index = songsListArray.findIndex((x) => x.name === playingSong.title);
+
+		let nextIndex = index + 1;
+		if (nextIndex >= songsListArray.length) {
+			nextIndex = 0; // Wrap around to the first song if we're at the end
+		}
+
+		playSong(nextIndex);
+
+		AudioEle.current.currentTime = 0;
+
+		// Add event listener for loadedmetadata
+		AudioEle.current.addEventListener("loadedmetadata", () => {
+			AudioEle.current.play(); // Start playing the next song
+			setIsPlaying(true);
+		});
+	};
+
+	//to auto slip to next song
+	const onEnded = () => {
+		skiptoNext();
+	};
+
+	// Add event listener for ended
 	useEffect(() => {
-		GetAllSongs();
-	}, [songs]);
-	useEffect(() => {
-		SetUpComingSong();
+		if (AudioEle.current) {
+			AudioEle.current.addEventListener("ended", onEnded);
+		}
+
+		// Clean up event listener on unmount
+		return () => {
+			if (AudioEle.current) {
+				AudioEle.current.removeEventListener("ended", onEnded);
+			}
+		};
 	}, [playingSong]);
-	useEffect(() => {
-		SetPlayingSong();
-	}, [songsListArray]);
+
+	// Function to save last played song details to local storage
+	const saveLastPlayedSong = () => {
+		const currentIndex = songsListArray.findIndex(
+			(song) => song.name === playingSong.title
+		);
+		localStorage.setItem("lastPlayedSongIndex", currentIndex);
+
+		localStorage.setItem(
+			"lastPlayedSongProgress",
+			AudioEle.current.currentTime
+		);
+	};
 
 	//inital details
 	useEffect(() => {
@@ -330,71 +379,16 @@ const MusicPlayer = () => {
 		}
 	}, [params?.slug]);
 
-	const skipBack = () => {
-		const index = songsListArray.findIndex((x) => x.name === playingSong.title);
-		if (index === 0) {
-			playSong(songsListArray.length - 1);
-		} else {
-			playSong(index - 1);
-		}
-		AudioEle.current.currentTime = 0;
-		// Add event listener for loadedmetadata
-		AudioEle.current.addEventListener("loadedmetadata", () => {
-			AudioEle.current.play(); // Start playing the next song
-			setIsPlaying(true);
-		});
-	};
-
-	const skiptoNext = () => {
-		const index = songsListArray.findIndex((x) => x.name === playingSong.title);
-
-		let nextIndex = index + 1;
-		if (nextIndex >= songsListArray.length) {
-			nextIndex = 0; // Wrap around to the first song if we're at the end
-		}
-
-		playSong(nextIndex);
-
-		AudioEle.current.currentTime = 0;
-
-		// Add event listener for loadedmetadata
-		AudioEle.current.addEventListener("loadedmetadata", () => {
-			AudioEle.current.play(); // Start playing the next song
-			setIsPlaying(true);
-		});
-	};
-
-	const onEnded = () => {
-		skiptoNext();
-	};
-
-	// Add event listener for ended
+	//lifecycle method
 	useEffect(() => {
-		if (AudioEle.current) {
-			AudioEle.current.addEventListener("ended", onEnded);
-		}
-
-		// Clean up event listener on unmount
-		return () => {
-			if (AudioEle.current) {
-				AudioEle.current.removeEventListener("ended", onEnded);
-			}
-		};
+		GetAllSongs();
+	}, [songs]);
+	useEffect(() => {
+		SetUpComingSong();
 	}, [playingSong]);
-
-	// Function to save last played song details to local storage
-	const saveLastPlayedSongIndex = () => {
-		const currentIndex = songsListArray.findIndex(
-			(song) => song.name === playingSong.title
-		);
-		localStorage.setItem("lastPlayedSongIndex", currentIndex);
-	};
-	const saveLastPlayedSongProgress = () => {
-		localStorage.setItem(
-			"lastPlayedSongProgress",
-			AudioEle.current.currentTime
-		);
-	};
+	useEffect(() => {
+		SetPlayingSong();
+	}, [songsListArray]);
 
 	return (
 		<MPlayer>
