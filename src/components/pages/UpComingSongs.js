@@ -59,7 +59,8 @@ const ContainerInner = styled.div`
 		background-color: #555;
 	}
 	@media (max-width: 640px) {
-		height: 100px;
+		height: 110px;
+		margin-bottom: 1rem;
 		justify-content: start;
 	}
 `;
