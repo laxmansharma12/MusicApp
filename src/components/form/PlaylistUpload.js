@@ -6,6 +6,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import SyncLoader from "react-spinners/SyncLoader";
 import musicFolderPhoto from "../images/musicFolder.png";
+import { useAuth } from "../../context/authProvider";
 
 const Container = styled.div`
 	display: flex;
@@ -140,8 +141,8 @@ const Loader = styled.div`
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-	height: 650px;
-	width: 303px;
+	height: 400px;
+	width: 100%;
 	color: #000;
 	z-index: 1;
 	animation: dissolveIn 1s ease-in-out;
@@ -170,14 +171,16 @@ const PlaylistUpload = ({ showCreatePlaylist, setShowCreatePlaylist }) => {
 	const [name, SetName] = useState("");
 	const [photo, setPhoto] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
-
+	const [auth, setAuth] = useAuth();
 	//add playlist
+
 	const handleCreate = async (e) => {
 		e.preventDefault();
 		try {
 			setIsSubmitting(true);
 			const PlaylistData = new FormData();
 			PlaylistData.append("name", name);
+			PlaylistData.append("owner", auth?.user._id);
 			if (!photo) {
 				// Convert the default musicFolderPhoto into a File object
 				const defaultPhotoBlob = await fetch(musicFolderPhoto).then((res) =>
@@ -196,13 +199,14 @@ const PlaylistUpload = ({ showCreatePlaylist, setShowCreatePlaylist }) => {
 				`${process.env.REACT_APP_API_BASE_URL}/api/v1/playlist/create-playlist`,
 				PlaylistData
 			);
-			if (data) {
+			if (data.success) {
 				toast.success(data.message);
 				setShowCreatePlaylist(!showCreatePlaylist);
 				setIsSubmitting(false);
 				window.location.reload();
 			} else {
 				toast.error(data.message);
+				setIsSubmitting(false);
 			}
 		} catch (error) {
 			console.log(error);

@@ -160,10 +160,6 @@ const VolSeekBar = styled.div`
 const MusicPlayer = () => {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [isMute, setIsMute] = useState(false);
-	const [songDetails, setSongDetails] = useState({
-		duration: 0,
-		progress: 0,
-	});
 	const [fill, setFill] = useState({ filling: 0, length: 0 });
 	const AudioEle = useRef();
 	const [vLevel, setVLevel] = useState(100); // Set default volume level
@@ -172,13 +168,18 @@ const MusicPlayer = () => {
 	const params = useParams();
 	const [songs, setSongs] = useAllSongs();
 	const [songsListArray, setSongsListArray] = useState([]);
+	const [upsongs, setUpSongs] = useUpSongs();
 	const [playingSong, setPlayingSong] = useState({
 		title: "",
 		artist: "",
 		current: "",
 		url: "",
 	});
-	const [upsongs, setUpSongs] = useUpSongs();
+	const [songDetails, setSongDetails] = useState({
+		duration: 0,
+		progress: 0,
+	});
+
 	const navigate = useNavigate();
 
 	//get all songs

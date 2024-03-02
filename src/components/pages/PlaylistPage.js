@@ -5,6 +5,9 @@ import { FaPlus } from "react-icons/fa6";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useAllSongs } from "../../context/SongsProvider";
+import PlaylistUpload from "../form/PlaylistUpload";
+import { useAuth } from "../../context/authProvider";
+import { GrDocumentNotes } from "react-icons/gr";
 
 const Container = styled.div`
 	display: flex;
@@ -25,11 +28,20 @@ const Header = styled.div`
 	justify-content: space-between;
 	align-items: start;
 	width: 100%;
+	.addPlaylist {
+		&:hover {
+			color: rgb(130, 217, 145);
+			cursor: pointer;
+		}
+	}
 `;
 const Title = styled.div`
+	margin: 0.5rem 0;
+`;
+const L = styled.label`
 	background-color: rgba(44, 42, 42, 0.762);
 	border-radius: 3rem;
-	padding-inline: 0.9rem;
+	padding-inline: 0.7rem;
 	padding-block: 0.5rem;
 	border: none;
 	cursor: pointer;
@@ -97,9 +109,34 @@ const Details = styled.div`
 	flex-direction: column;
 `;
 
+const EmptyPlaylist = styled.div`
+	display: flex;
+	justify-content: start;
+	width: 99%;
+	height: 100%;
+	align-items: center;
+	gap: 0.5rem;
+	flex-direction: column;
+	.emptyIcon {
+		margin-top: 4rem;
+		font-size: 3rem;
+	}
+`;
+
+const Button = styled.button`
+	border-radius: 10px;
+	&:hover {
+		padding: 0.3rem;
+	}
+`;
+
 const PlaylistPage = () => {
 	const [playlists, setPlaylists] = useState([]);
 	const [songs, setSongs] = useAllSongs();
+	const [auth, setAuth] = useAuth();
+	const [showCreatePlaylist, setShowCreatePlaylist] = useState(false);
+	const [myPlaylist, setMyPlaylist] = useState(false);
+	const [myPlaylistArray, setMyPlaylistArray] = useState([]);
 
 	//get all playlist
 	const getAllPlaylists = async () => {
@@ -111,41 +148,111 @@ const PlaylistPage = () => {
 				setPlaylists(data?.playlist);
 			}
 		} catch (error) {
-			console.log(error);
-			toast.error("Something wwent wrong in getting playlist");
+			console.error("Error fetching playlists:", error);
+			toast.error("Something went wrong in getting playlists");
 		}
+	};
+
+	const MyPlaylists = () => {
+		const filteredPlaylists = playlists.filter(
+			(p) => p.owner === auth?.user?._id
+		);
+		setMyPlaylistArray(filteredPlaylists);
 	};
 
 	useEffect(() => {
 		getAllPlaylists();
 	}, []);
 
+	useEffect(() => {
+		MyPlaylists();
+	}, [playlists]);
+
 	return (
-		<Container>
-			<Header>
-				<Label>
-					<GiBookshelf />
-					Your Library
-				</Label>
-				<FaPlus />
-			</Header>
-			<Title>
-				<Label>Playlist</Label>
-			</Title>
-			<ContainerInner>
-				{playlists?.map((p) => (
-					<PlayList key={p._id}>
-						<Img src={p?.photo?.url} alt="playlist Photo" />
-						<Details>
-							<Name>{p.name}</Name>
-							<Artist>
-								{songs?.songs?.filter((x) => x.playlist === p._id).length}
-							</Artist>
-						</Details>
-					</PlayList>
-				))}
-			</ContainerInner>
-		</Container>
+		<>
+			<Container>
+				<Header>
+					<Label>
+						<GiBookshelf />
+						Your Library
+					</Label>
+					<FaPlus
+						className="addPlaylist"
+						onClick={() => setShowCreatePlaylist(!showCreatePlaylist)}
+					/>
+				</Header>
+				<Title>
+					<L onClick={() => setMyPlaylist(false)}>All Playlists</L>
+					<L
+						onClick={() => {
+							auth?.user
+								? (() => {
+										setMyPlaylist(true);
+										MyPlaylists();
+								  })()
+								: toast.error("Please Login");
+						}}
+					>
+						My Playlist
+					</L>
+				</Title>
+				{!myPlaylist && (
+					<ContainerInner>
+						{playlists?.map((p) => {
+							return (
+								<PlayList key={p._id}>
+									<Img src={p?.photo?.url} alt="playlist Photo" />
+									<Details>
+										<Name>{p.name}</Name>
+										<Artist>
+											{songs?.songs?.filter((x) => x.playlist === p._id).length}
+										</Artist>
+									</Details>
+								</PlayList>
+							);
+						})}
+					</ContainerInner>
+				)}
+				{myPlaylist && auth?.user && (
+					<>
+						{myPlaylistArray && myPlaylistArray.length !== 0 ? (
+							<ContainerInner>
+								{myPlaylistArray.map((m) => (
+									<PlayList key={m._id}>
+										<Img src={m?.photo?.url} alt="playlist Photo" />
+										<Details>
+											<Name>{m.name}</Name>
+											<Artist>
+												{
+													songs?.songs?.filter((x) => x.playlist === m._id)
+														.length
+												}
+											</Artist>
+										</Details>
+									</PlayList>
+								))}
+							</ContainerInner>
+						) : (
+							<EmptyPlaylist>
+								<GrDocumentNotes className="emptyIcon" />
+								<Label>No Playlists Found</Label>
+								<Button
+									onClick={() => setShowCreatePlaylist(!showCreatePlaylist)}
+								>
+									Click here to add
+								</Button>
+							</EmptyPlaylist>
+						)}
+					</>
+				)}
+			</Container>
+			{showCreatePlaylist && (
+				<PlaylistUpload
+					showCreatePlaylist={showCreatePlaylist}
+					setShowCreatePlaylist={setShowCreatePlaylist}
+				/>
+			)}
+		</>
 	);
 };
 

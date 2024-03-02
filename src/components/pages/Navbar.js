@@ -121,6 +121,7 @@ const Navbar = () => {
 			token: "",
 		});
 		toast.success("Logout Successfully!!");
+		window.location.reload();
 		localStorage.removeItem("auth");
 	};
 	return (

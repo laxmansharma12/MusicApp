@@ -176,8 +176,8 @@ const Loader = styled.div`
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-	height: 650px;
-	width: 303px;
+	height: 500px;
+	width: 100%;
 	color: #000;
 	z-index: 1;
 	animation: dissolveIn 1s ease-in-out;
@@ -258,7 +258,7 @@ const SongUpload = ({ upload, setUpload }) => {
 					`${process.env.REACT_APP_API_BASE_URL}/api/v1/music/create-music`,
 					MusicData
 				);
-				if (data) {
+				if (data.success) {
 					toast.success(data.message);
 					setUpload(!upload);
 					setIsSubmitting(false);
