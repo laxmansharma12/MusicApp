@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAllSongs } from "../../context/SongsProvider";
 import { useNavigate } from "react-router-dom";
+import { usePlaylistSongs } from "../../context/playlistSongsProvider";
+import { FaArrowLeft } from "react-icons/fa6";
 
 const Container = styled.div`
 	display: flex;
-	justify-content: center;
+	justify-content: start;
 	align-items: start;
 	flex-direction: column;
 	background-color: rgba(44, 42, 42, 0.762);
@@ -20,7 +22,16 @@ const Container = styled.div`
 	}
 `;
 const Header = styled.h2`
-	margin: 0 0 15px 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+	margin: 10px 0 15px 10px;
+	.GoBack {
+		&:hover {
+			color: rgb(160, 202, 240);
+		}
+	}
 `;
 
 const SongsContainer = styled.div`
@@ -78,6 +89,7 @@ const Details = styled.div`
 const AllSongs = () => {
 	const [songs, setSongs] = useAllSongs();
 	const [songsListArray, setSongsListArray] = useState([]);
+	const [playlistSongs, setPlaylistSongs] = usePlaylistSongs();
 	const navigate = useNavigate();
 
 	//get all recipes
@@ -94,18 +106,43 @@ const AllSongs = () => {
 	}, [songs]);
 	return (
 		<Container>
-			<Header>All Songs</Header>
-			<SongsContainer>
-				{songsListArray?.map((s) => (
-					<Songs key={s._id} onClick={() => navigate(`/${s.slug}`)}>
-						<Img src={s?.photo?.url} alt="song Photo" />
-						<Details>
-							<Name>{s.name}</Name>
-							<Artist>{s.artist.substring(0, 20)}...</Artist>
-						</Details>
-					</Songs>
-				))}
-			</SongsContainer>
+			{playlistSongs && playlistSongs?.songs?.length === 0 ? (
+				<>
+					<Header>All Songs</Header>
+					<SongsContainer>
+						{songsListArray?.map((s) => (
+							<Songs key={s._id} onClick={() => navigate(`/${s.slug}`)}>
+								<Img src={s?.photo?.url} alt="song Photo" />
+								<Details>
+									<Name>{s.name}</Name>
+									<Artist>{s.artist.substring(0, 20)}...</Artist>
+								</Details>
+							</Songs>
+						))}
+					</SongsContainer>
+				</>
+			) : (
+				<>
+					<Header>
+						<FaArrowLeft
+							className="GoBack"
+							onClick={() => setPlaylistSongs({ playlist: "", songs: [] })}
+						/>
+						{playlistSongs.playlist}
+					</Header>
+					<SongsContainer>
+						{playlistSongs?.songs?.map((p) => (
+							<Songs key={p._id} onClick={() => navigate(`/${p.slug}`)}>
+								<Img src={p?.photo?.url} alt="song Photo" />
+								<Details>
+									<Name>{p.name}</Name>
+									<Artist>{p.artist.substring(0, 20)}...</Artist>
+								</Details>
+							</Songs>
+						))}
+					</SongsContainer>
+				</>
+			)}
 		</Container>
 	);
 };

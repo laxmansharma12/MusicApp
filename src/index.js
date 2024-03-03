@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/authProvider.js";
 import { SongsProvider } from "./context/SongsProvider.js";
 import { UpcomingSongProvider } from "./context/upcomingSongsProvider.js";
+import { PlaylistSongProvider } from "./context/playlistSongsProvider.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -14,10 +15,12 @@ root.render(
 	<AuthProvider>
 		<SongsProvider>
 			<UpcomingSongProvider>
-				<BrowserRouter>
-					<App />
-					<Toaster />
-				</BrowserRouter>
+				<PlaylistSongProvider>
+					<BrowserRouter>
+						<App />
+						<Toaster />
+					</BrowserRouter>
+				</PlaylistSongProvider>
 			</UpcomingSongProvider>
 		</SongsProvider>
 	</AuthProvider>

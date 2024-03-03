@@ -1,16 +1,8 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 const UpcomingSongContext = createContext();
 
 const UpcomingSongProvider = ({ children }) => {
 	const [upsongs, setUpSongs] = useState([]);
-
-	useEffect(() => {
-		const data = localStorage.getItem("UpComingSongs");
-		if (data) {
-			const parseData = JSON.parse(data);
-			setUpSongs(parseData);
-		}
-	}, []);
 	return (
 		<UpcomingSongContext.Provider value={[upsongs, setUpSongs]}>
 			{children}

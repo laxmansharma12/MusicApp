@@ -8,6 +8,7 @@ import { useAllSongs } from "../../context/SongsProvider";
 import PlaylistUpload from "../form/PlaylistUpload";
 import { useAuth } from "../../context/authProvider";
 import { GrDocumentNotes } from "react-icons/gr";
+import { usePlaylistSongs } from "../../context/playlistSongsProvider";
 
 const Container = styled.div`
 	display: flex;
@@ -137,6 +138,7 @@ const PlaylistPage = () => {
 	const [showCreatePlaylist, setShowCreatePlaylist] = useState(false);
 	const [myPlaylist, setMyPlaylist] = useState(false);
 	const [myPlaylistArray, setMyPlaylistArray] = useState([]);
+	const [playlistSongs, setPlaylistSongs] = usePlaylistSongs();
 
 	//get all playlist
 	const getAllPlaylists = async () => {
@@ -159,6 +161,20 @@ const PlaylistPage = () => {
 		);
 		setMyPlaylistArray(filteredPlaylists);
 	};
+
+	const showPlaylistSongs = (id) => {
+		const FilteredPlaylistSongs = songs?.songs.filter((p) => p.playlist === id);
+		const findPlaylist = playlists.find((f) => f._id === id);
+		if (FilteredPlaylistSongs.length !== 0) {
+			setPlaylistSongs({
+				playlist: findPlaylist.name,
+				songs: FilteredPlaylistSongs,
+			});
+		} else {
+			toast.error("No Songs in this Playlist");
+		}
+	};
+	console.log(playlistSongs);
 
 	useEffect(() => {
 		getAllPlaylists();
@@ -200,7 +216,7 @@ const PlaylistPage = () => {
 					<ContainerInner>
 						{playlists?.map((p) => {
 							return (
-								<PlayList key={p._id}>
+								<PlayList key={p._id} onClick={() => showPlaylistSongs(p._id)}>
 									<Img src={p?.photo?.url} alt="playlist Photo" />
 									<Details>
 										<Name>{p.name}</Name>
