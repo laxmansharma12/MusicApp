@@ -174,7 +174,6 @@ const PlaylistPage = () => {
 			toast.error("No Songs in this Playlist");
 		}
 	};
-	console.log(playlistSongs);
 
 	useEffect(() => {
 		getAllPlaylists();
