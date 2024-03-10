@@ -26,7 +26,6 @@ export const SearchInput = () => {
 			console.log(error);
 		}
 	};
-	console.log(values);
 
 	return (
 		<Div>

@@ -126,7 +126,7 @@ const Navbar = () => {
 	};
 	return (
 		<Nav>
-			<H1>Music</H1>
+			<H1>Music Player</H1>
 			<SearchInput />
 			<ButtonContainer>
 				{!auth.user ? (

@@ -7,6 +7,7 @@ import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
 import styled from "styled-components";
 import { useAllSongs } from "../../context/SongsProvider";
 import { useUpSongs } from "../../context/upcomingSongsProvider";
+import { usePlaylistSongs } from "../../context/playlistSongsProvider";
 
 const MPlayer = styled.div`
 	display: flex;
@@ -167,8 +168,9 @@ const MusicPlayer = () => {
 	const volRef = useRef();
 	const params = useParams();
 	const [songs, setSongs] = useAllSongs();
-	const [songsListArray, setSongsListArray] = useState([]);
+	const [tempSongs, setTempSongs] = useState([]);
 	const [upsongs, setUpSongs] = useUpSongs();
+	const [playlistSongs, setPlaylistSongs] = usePlaylistSongs();
 	const [playingSong, setPlayingSong] = useState({
 		title: "",
 		artist: "",
@@ -183,13 +185,12 @@ const MusicPlayer = () => {
 	const navigate = useNavigate();
 
 	//get all songs
-	const GetAllSongs = async () => {
-		// Assuming songs is an array of promises
-		if (songs?.songs) {
-			const updatedSongsListArray = await Promise.all(songs?.songs);
-			// Set the new array to the state
-			setSongsListArray(updatedSongsListArray);
-			setUpSongs(updatedSongsListArray);
+	const GetAllSongs = () => {
+		const data = localStorage.getItem("playlistSongs");
+		if (data) {
+			setTempSongs(JSON.parse(data));
+		} else {
+			setTempSongs(songs?.songs);
 		}
 	};
 
@@ -250,8 +251,8 @@ const MusicPlayer = () => {
 		AudioEle.current.volume = divprogress / 100;
 	};
 
-	const SetPlayingSong = async () => {
-		if (songsListArray.length !== 0) {
+	const SetPlayingSong = () => {
+		if (tempSongs && tempSongs.length !== 0) {
 			// Function to play the last played song
 
 			const lastPlayedSongIndex = localStorage.getItem("lastPlayedSongIndex");
@@ -259,7 +260,11 @@ const MusicPlayer = () => {
 				"lastPlayedSongProgress"
 			);
 
-			if (lastPlayedSongIndex !== null && lastPlayedSongProgress !== null) {
+			if (
+				lastPlayedSongIndex !== null &&
+				lastPlayedSongIndex &&
+				lastPlayedSongProgress !== null
+			) {
 				playSong(lastPlayedSongIndex);
 				AudioEle.current.currentTime = lastPlayedSongProgress;
 			} else {
@@ -269,31 +274,32 @@ const MusicPlayer = () => {
 	};
 
 	const playSong = (index) => {
-		if (index >= 0 && index < songsListArray.length) {
+		if (index >= 0 && index < tempSongs.length) {
 			setPlayingSong({
-				title: songsListArray[index].name,
-				artist: songsListArray[index].artist,
-				current: songsListArray[index].music.url,
-				url: songsListArray[index].photo.url,
+				title: tempSongs[index].name,
+				artist: tempSongs[index].artist,
+				current: tempSongs[index].music.url,
+				url: tempSongs[index].photo.url,
 			});
 		}
 	};
 
 	const setUpcomingSongs = () => {
-		const index = songsListArray.findIndex((x) => x.name === playingSong.title);
-		const remainingSongs = songsListArray.slice(index + 1); // Get elements from index + 1 to the end
-		const removedSongs = songsListArray.slice(0, index);
-		const newOrder = remainingSongs.concat(removedSongs); // Concatenate sliced elements with remaining elements
-		if (newOrder) {
-			setUpSongs(newOrder);
+		const index = tempSongs.findIndex((x) => x.name === playingSong.title);
+		const remainingSongs = tempSongs.slice(index + 1);
+		const removedSongs = tempSongs.slice(0, index);
+		if (remainingSongs.length > 0) {
+			setUpSongs(remainingSongs);
+		} else {
+			setUpSongs(removedSongs);
 		}
 	};
 
 	//previous song
 	const skipBack = () => {
-		const index = songsListArray.findIndex((x) => x.name === playingSong.title);
+		const index = tempSongs.findIndex((x) => x.name === playingSong.title);
 		if (index === 0) {
-			playSong(songsListArray.length - 1);
+			playSong(tempSongs.length - 1);
 		} else {
 			playSong(index - 1);
 		}
@@ -307,10 +313,10 @@ const MusicPlayer = () => {
 
 	//next song
 	const skiptoNext = () => {
-		const index = songsListArray.findIndex((x) => x.name === playingSong.title);
+		const index = tempSongs.findIndex((x) => x.name === playingSong.title);
 
 		let nextIndex = index + 1;
-		if (nextIndex >= songsListArray.length) {
+		if (nextIndex >= tempSongs.length) {
 			nextIndex = 0; // Wrap around to the first song if we're at the end
 		}
 
@@ -346,7 +352,7 @@ const MusicPlayer = () => {
 
 	// Function to save last played song details to local storage
 	const saveLastPlayedSong = () => {
-		const currentIndex = songsListArray.findIndex(
+		const currentIndex = tempSongs.findIndex(
 			(song) => song.name === playingSong.title
 		);
 		localStorage.setItem("lastPlayedSongIndex", currentIndex);
@@ -359,10 +365,9 @@ const MusicPlayer = () => {
 
 	//inital details
 	useEffect(() => {
-		// if (params?.slug) getSong();
 		if (params?.slug) {
 			const normalizeString = (str) => str.replace(/[^a-zA-Z0-9]/g, ""); // Remove non-alphanumeric characters
-			const index = songsListArray.findIndex(
+			const index = tempSongs.findIndex(
 				(x) =>
 					normalizeString(x.name) === normalizeString(params.slug.toString())
 			);
@@ -380,6 +385,17 @@ const MusicPlayer = () => {
 				navigate("/");
 			}
 		}
+		if (params?.slug && params?.playlist) {
+			localStorage.setItem(
+				"playlistSongs",
+				JSON.stringify(playlistSongs?.songs)
+			);
+			GetAllSongs();
+		}
+		if (params?.slug && !params?.playlist) {
+			localStorage.removeItem("playlistSongs");
+			GetAllSongs();
+		}
 	}, [params?.slug]);
 
 	//lifecycle method
@@ -389,7 +405,7 @@ const MusicPlayer = () => {
 
 	useEffect(() => {
 		SetPlayingSong();
-	}, [songsListArray]);
+	}, [tempSongs]);
 	useEffect(() => {
 		setUpcomingSongs();
 	}, [playingSong]);

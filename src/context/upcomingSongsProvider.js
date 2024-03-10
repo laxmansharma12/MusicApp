@@ -3,6 +3,7 @@ const UpcomingSongContext = createContext();
 
 const UpcomingSongProvider = ({ children }) => {
 	const [upsongs, setUpSongs] = useState([]);
+
 	return (
 		<UpcomingSongContext.Provider value={[upsongs, setUpSongs]}>
 			{children}

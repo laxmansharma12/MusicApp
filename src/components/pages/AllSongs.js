@@ -132,7 +132,10 @@ const AllSongs = () => {
 					</Header>
 					<SongsContainer>
 						{playlistSongs?.songs?.map((p) => (
-							<Songs key={p._id} onClick={() => navigate(`/${p.slug}`)}>
+							<Songs
+								key={p._id}
+								onClick={() => navigate(`/${p.slug}/${p.playlist}`)}
+							>
 								<Img src={p?.photo?.url} alt="song Photo" />
 								<Details>
 									<Name>{p.name}</Name>
