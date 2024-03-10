@@ -3,6 +3,7 @@ import { IoArrowForwardOutline } from "react-icons/io5";
 import styled from "styled-components";
 import { useUpSongs } from "../../context/upcomingSongsProvider";
 import { useNavigate } from "react-router-dom";
+import empty from "../images/empty.png";
 
 const UpComing = styled.div`
 	display: flex;
@@ -33,7 +34,7 @@ const Title = styled.div`
 `;
 const Label = styled.label``;
 
-const ContainerInner = styled.div`
+const Container = styled.div`
 	display: flex;
 	justify-content: start;
 	align-items: start;
@@ -93,6 +94,27 @@ const Details = styled.div`
 	flex-direction: column;
 `;
 
+const Empty = styled.img`
+	height: 90px;
+	width: 130px;
+	@media (max-width: 640px) {
+		height: 70px;
+		width: 100px;
+	}
+`;
+
+const EmptyContainer = styled.div`
+	margin: auto;
+	margin-left: 2.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	@media (max-width: 640px) {
+		margin-left: 6rem;
+	}
+`;
+
 const UpComingSongs = () => {
 	const [upsongs, setUpSongs] = useUpSongs();
 	const navigate = useNavigate();
@@ -102,17 +124,26 @@ const UpComingSongs = () => {
 				<Label>Up Coming</Label>
 				<IoArrowForwardOutline />
 			</Title>
-			<ContainerInner>
-				{upsongs?.map((s) => (
-					<Song key={s._id} onClick={() => navigate(`/${s.slug}`)}>
-						<Img src={s?.photo?.url} alt="song Photo" />
-						<Details>
-							<Name>{s.name}</Name>
-							<Artist>{s.artist}</Artist>
-						</Details>
-					</Song>
-				))}
-			</ContainerInner>
+			<Container>
+				{upsongs.length > 0 ? (
+					<>
+						{upsongs?.map((s) => (
+							<Song key={s._id} onClick={() => navigate(`/${s.slug}`)}>
+								<Img src={s?.photo?.url} alt="song Photo" />
+								<Details>
+									<Name>{s.name}</Name>
+									<Artist>{s.artist}</Artist>
+								</Details>
+							</Song>
+						))}
+					</>
+				) : (
+					<EmptyContainer>
+						<Empty src={empty} />
+						<Label>Empty</Label>
+					</EmptyContainer>
+				)}
+			</Container>
 		</UpComing>
 	);
 };

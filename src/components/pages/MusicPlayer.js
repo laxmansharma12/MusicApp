@@ -288,10 +288,10 @@ const MusicPlayer = () => {
 		const index = tempSongs.findIndex((x) => x.name === playingSong.title);
 		const remainingSongs = tempSongs.slice(index + 1);
 		const removedSongs = tempSongs.slice(0, index);
-		if (remainingSongs.length > 0) {
-			setUpSongs(remainingSongs);
-		} else {
-			setUpSongs(removedSongs);
+		const newOrder = remainingSongs.concat(removedSongs); // Concatenate sliced elements with remaining elements
+
+		if (newOrder) {
+			setUpSongs(newOrder);
 		}
 	};
 
@@ -320,8 +320,11 @@ const MusicPlayer = () => {
 			nextIndex = 0; // Wrap around to the first song if we're at the end
 		}
 
-		playSong(nextIndex);
-
+		if (tempSongs.length > 1) {
+			playSong(nextIndex);
+		} else {
+			AudioEle.current.play();
+		}
 		AudioEle.current.currentTime = 0;
 
 		// Add event listener for loadedmetadata

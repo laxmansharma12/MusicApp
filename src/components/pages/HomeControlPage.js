@@ -5,6 +5,7 @@ import { MdCloudUpload } from "react-icons/md";
 import SongUpload from "../form/SongUpload";
 import { useAuth } from "../../context/authProvider";
 import { toast } from "react-hot-toast";
+import { usePlaylistSongs } from "../../context/playlistSongsProvider";
 
 const Container = styled.div`
 	display: flex;
@@ -29,9 +30,10 @@ const Item = styled.div`
 const HomeControlPage = () => {
 	const [auth, setAuth] = useAuth();
 	const [upload, setUpload] = useState(false);
+	const [playlistSongs, setPlaylistSongs] = usePlaylistSongs();
 	return (
 		<Container>
-			<Item>
+			<Item onClick={() => setPlaylistSongs({ playlist: "", songs: [] })}>
 				<AiFillHome />
 				Home
 			</Item>
