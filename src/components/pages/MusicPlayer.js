@@ -369,34 +369,32 @@ const MusicPlayer = () => {
 	//inital details
 	useEffect(() => {
 		if (params?.slug) {
-			const normalizeString = (str) => str.replace(/[^a-zA-Z0-9]/g, ""); // Remove non-alphanumeric characters
+			const normalizeString = (str) => str.replace(/[^a-zA-Z0-9]/g, "");
 			const index = tempSongs.findIndex(
 				(x) =>
 					normalizeString(x.name) === normalizeString(params.slug.toString())
 			);
+			localStorage.removeItem("lastPlayedSongIndex");
+			localStorage.removeItem("lastPlayedSongProgress");
 			playSong(index);
 			if (AudioEle.current) {
 				AudioEle.current.currentTime = 0;
-				// Add event listener for loadedmetadata
 				AudioEle.current.addEventListener("loadedmetadata", () => {
 					if (isPlaying) {
 						AudioEle.current.play();
 						setIsPlaying(true);
-						navigate("/");
 					}
 				});
 				navigate("/");
 			}
-		}
-		if (params?.slug && params?.playlist) {
-			localStorage.setItem(
-				"playlistSongs",
-				JSON.stringify(playlistSongs?.songs)
-			);
-			GetAllSongs();
-		}
-		if (params?.slug && !params?.playlist) {
-			localStorage.removeItem("playlistSongs");
+			if (params?.playlist) {
+				localStorage.setItem(
+					"playlistSongs",
+					JSON.stringify(playlistSongs?.songs)
+				);
+			} else {
+				localStorage.removeItem("playlistSongs");
+			}
 			GetAllSongs();
 		}
 	}, [params?.slug]);
