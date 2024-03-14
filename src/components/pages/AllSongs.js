@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { usePlaylistSongs } from "../../context/playlistSongsProvider";
 import { FaArrowLeft } from "react-icons/fa6";
 import PlaylistPage from "./PlaylistPage";
+import { SearchInput } from "../form/SearchInput";
 
 const Container = styled.div`
 	display: flex;
@@ -20,6 +21,13 @@ const Container = styled.div`
 	color: #fff;
 	@media (max-width: 640px) {
 		width: 90%;
+	}
+`;
+
+const SearchContainer = styled.div`
+	width: 100%;
+	@media (min-width: 640px) {
+		display: none;
 	}
 `;
 
@@ -141,6 +149,10 @@ const AllSongs = () => {
 	}, [songs]);
 	return (
 		<Container>
+			<SearchContainer>
+				<SearchInput />
+			</SearchContainer>
+
 			{playlistSongs && playlistSongs?.songs?.length === 0 ? (
 				<>
 					<HeaderContainer>

@@ -21,6 +21,12 @@ const Nav = styled.div`
 	border-radius: 10px;
 	z-index: 10;
 `;
+
+const SearchContainer = styled.div`
+	@media (max-width: 640px) {
+		display: none;
+	}
+`;
 const ButtonContainer = styled.div`
 	display: flex;
 	justify-content: end;
@@ -130,7 +136,9 @@ const Navbar = () => {
 	return (
 		<Nav>
 			<H1>Music Player</H1>
-			<SearchInput />
+			<SearchContainer>
+				<SearchInput />
+			</SearchContainer>
 			<ButtonContainer>
 				{!auth.user ? (
 					<>

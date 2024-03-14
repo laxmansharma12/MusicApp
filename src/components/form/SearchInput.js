@@ -30,11 +30,11 @@ export const SearchInput = () => {
 	return (
 		<Div>
 			<Form role="search" onSubmit={handleSubmit}>
-				<IoIosSearch />
+				<IoIosSearch className="icon" />
 				<Input
 					className="custom-input"
 					type="search"
-					placeholder="Search..."
+					placeholder="Search Song/Artist ..."
 					aria-label="Search"
 					onChange={(e) => setValues(e.target.value)}
 				/>
@@ -55,11 +55,15 @@ const Form = styled.form`
 	border: 2px solid rgba(44, 42, 42, 0.762);
 	height: 40px;
 	padding: 0 15px;
-	@media (max-width: 640px) {
-		display: none;
-	}
 	@media (max-width: 1120px) {
 		margin-right: 40px;
+	}
+	@media (max-width: 640px) {
+		margin-right: 0;
+		margin-left: -1.5rem;
+		.icon {
+			font-size: 2rem;
+		}
 	}
 `;
 const Input = styled.input`
