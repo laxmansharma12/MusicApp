@@ -28,6 +28,15 @@ const HeaderContainer = styled.div`
 	justify-content: space-around;
 	align-items: center;
 	width: 100%;
+	.playlist {
+		@media (min-width: 640px) {
+			display: none;
+		}
+	}
+	@media (min-width: 640px) {
+		justify-content: start;
+		align-items: start;
+	}
 `;
 
 const Header = styled.h3`
@@ -55,28 +64,6 @@ const Header = styled.h3`
 			background-color: #383636;
 		}
 	}
-`;
-
-const Select = styled.select`
-	background-color: rgba(44, 42, 42, 0.762);
-	border-radius: 3rem;
-	padding-inline: 0.7rem;
-	padding-block: 0.5rem;
-	border: none;
-	color: #fff;
-	font-size: 1.17rem;
-	cursor: pointer;
-	outline: none;
-	font-weight: bold;
-	margin-right: 0.5rem;
-	transition: 0.2s ease-in-out;
-	&:hover {
-		background-color: #383636;
-	}
-`;
-const Option = styled.option`
-	border: none;
-	outline: none;
 `;
 
 const SongsContainer = styled.div`
@@ -158,7 +145,10 @@ const AllSongs = () => {
 				<>
 					<HeaderContainer>
 						<Header onClick={() => setShowPlaylist(true)}>All Songs</Header>
-						<Header onClick={() => setShowPlaylist(!showPlaylist)}>
+						<Header
+							className="playlist"
+							onClick={() => setShowPlaylist(!showPlaylist)}
+						>
 							Playlists
 						</Header>
 					</HeaderContainer>
