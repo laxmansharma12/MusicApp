@@ -32,6 +32,10 @@ const Header = styled.h2`
 			color: rgb(160, 202, 240);
 		}
 	}
+	@media (max-width: 640px) {
+		border: 1px solid #fff;
+		padding: 5px;
+	}
 `;
 
 const SongsContainer = styled.div`
@@ -58,7 +62,8 @@ const Songs = styled.div`
 	height: 155px;
 	width: 155px;
 	@media (max-width: 640px) {
-		width: 170px;
+		width: 148px;
+		height: 150px;
 		gap: 5px;
 	}
 `;
@@ -69,9 +74,6 @@ const Img = styled.img`
 	border-top-right-radius: 15%;
 	border-top-left-radius: 15%;
 	padding: 7px 8px 5px;
-	@media (max-width: 640px) {
-		height: 60%;
-	}
 `;
 
 const Name = styled.label`
