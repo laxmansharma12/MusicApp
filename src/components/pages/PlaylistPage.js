@@ -22,6 +22,11 @@ const Container = styled.div`
 	border-radius: 10px;
 	height: 78vh;
 	width: 80%;
+	@media (max-width: 640px) {
+		background-color: transparent;
+		padding: 0.5rem 1rem;
+		width: 90%;
+	}
 `;
 
 const Header = styled.div`
@@ -87,6 +92,11 @@ const PlayList = styled.div`
 	align-items: start;
 	gap: 10px;
 	cursor: pointer;
+	@media (max-width: 640px) {
+		background-color: rgba(44, 42, 42, 0.762);
+		padding: 0.5rem 1rem;
+		border-radius: 3rem;
+	}
 `;
 const Img = styled.img`
 	border: 1px solid rgb(130, 133, 135);

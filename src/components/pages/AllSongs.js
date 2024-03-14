@@ -4,6 +4,7 @@ import { useAllSongs } from "../../context/SongsProvider";
 import { useNavigate } from "react-router-dom";
 import { usePlaylistSongs } from "../../context/playlistSongsProvider";
 import { FaArrowLeft } from "react-icons/fa6";
+import PlaylistPage from "./PlaylistPage";
 
 const Container = styled.div`
 	display: flex;
@@ -21,7 +22,15 @@ const Container = styled.div`
 		width: 90%;
 	}
 `;
-const Header = styled.h2`
+
+const HeaderContainer = styled.div`
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 100%;
+`;
+
+const Header = styled.h3`
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -33,9 +42,41 @@ const Header = styled.h2`
 		}
 	}
 	@media (max-width: 640px) {
-		border: 1px solid #fff;
-		padding: 5px;
+		background-color: rgba(44, 42, 42, 0.762);
+		border-radius: 3rem;
+		padding-inline: 0.7rem;
+		padding-block: 0.5rem;
+		border: none;
+		cursor: pointer;
+		font-weight: bold;
+		margin-right: 0.5rem;
+		transition: 0.2s ease-in-out;
+		&:hover {
+			background-color: #383636;
+		}
 	}
+`;
+
+const Select = styled.select`
+	background-color: rgba(44, 42, 42, 0.762);
+	border-radius: 3rem;
+	padding-inline: 0.7rem;
+	padding-block: 0.5rem;
+	border: none;
+	color: #fff;
+	font-size: 1.17rem;
+	cursor: pointer;
+	outline: none;
+	font-weight: bold;
+	margin-right: 0.5rem;
+	transition: 0.2s ease-in-out;
+	&:hover {
+		background-color: #383636;
+	}
+`;
+const Option = styled.option`
+	border: none;
+	outline: none;
 `;
 
 const SongsContainer = styled.div`
@@ -96,6 +137,7 @@ const AllSongs = () => {
 	const [songs, setSongs] = useAllSongs();
 	const [songsListArray, setSongsListArray] = useState([]);
 	const [playlistSongs, setPlaylistSongs] = usePlaylistSongs();
+	const [showPlaylist, setShowPlaylist] = useState(true);
 	const navigate = useNavigate();
 
 	//get all recipes
@@ -114,18 +156,27 @@ const AllSongs = () => {
 		<Container>
 			{playlistSongs && playlistSongs?.songs?.length === 0 ? (
 				<>
-					<Header>All Songs</Header>
-					<SongsContainer>
-						{songsListArray?.map((s) => (
-							<Songs key={s._id} onClick={() => navigate(`/${s.slug}`)}>
-								<Img src={s?.photo?.url} alt="song Photo" />
-								<Details>
-									<Name>{s.name}</Name>
-									<Artist>{s.artist.substring(0, 20)}...</Artist>
-								</Details>
-							</Songs>
-						))}
-					</SongsContainer>
+					<HeaderContainer>
+						<Header onClick={() => setShowPlaylist(true)}>All Songs</Header>
+						<Header onClick={() => setShowPlaylist(!showPlaylist)}>
+							Playlists
+						</Header>
+					</HeaderContainer>
+					{showPlaylist ? (
+						<SongsContainer>
+							{songsListArray?.map((s) => (
+								<Songs key={s._id} onClick={() => navigate(`/${s.slug}`)}>
+									<Img src={s?.photo?.url} alt="song Photo" />
+									<Details>
+										<Name>{s.name}</Name>
+										<Artist>{s.artist.substring(0, 20)}...</Artist>
+									</Details>
+								</Songs>
+							))}
+						</SongsContainer>
+					) : (
+						<PlaylistPage />
+					)}
 				</>
 			) : (
 				<>
