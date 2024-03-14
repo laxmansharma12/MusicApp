@@ -43,7 +43,7 @@ const SongsContainer = styled.div`
 	gap: 10px;
 	width: 100%;
 	@media (max-width: 640px) {
-		justify-content: center;
+		justify-content: space-around;
 		padding: 0;
 	}
 `;
@@ -58,7 +58,8 @@ const Songs = styled.div`
 	height: 155px;
 	width: 155px;
 	@media (max-width: 640px) {
-		width: 147px;
+		width: 170px;
+		gap: 5px;
 	}
 `;
 const Img = styled.img`
@@ -68,6 +69,9 @@ const Img = styled.img`
 	border-top-right-radius: 15%;
 	border-top-left-radius: 15%;
 	padding: 7px 8px 5px;
+	@media (max-width: 640px) {
+		height: 60%;
+	}
 `;
 
 const Name = styled.label`
