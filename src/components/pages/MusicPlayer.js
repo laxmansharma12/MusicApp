@@ -51,6 +51,9 @@ const Details = styled.div`
 
 const Title = styled.div`
 	padding-left: 20px;
+	@media (max-width: 640px) {
+		padding-left: 14px;
+	}
 `;
 
 const Name = styled.h1`
