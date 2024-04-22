@@ -5,9 +5,9 @@ import { IoIosPause } from "react-icons/io";
 import { FaForward, FaBackward } from "react-icons/fa";
 import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
 import styled from "styled-components";
-import { useAllSongs } from "../../context/SongsProvider";
-import { useUpSongs } from "../../context/upcomingSongsProvider";
-import { usePlaylistSongs } from "../../context/playlistSongsProvider";
+import { useAllSongs } from "../context/SongsProvider";
+import { useUpSongs } from "../context/upcomingSongsProvider";
+import { usePlaylistSongs } from "../context/playlistSongsProvider";
 
 const MPlayer = styled.div`
 	display: flex;

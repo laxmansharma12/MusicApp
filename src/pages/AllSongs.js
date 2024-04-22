@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useAllSongs } from "../../context/SongsProvider";
 import { useNavigate } from "react-router-dom";
-import { usePlaylistSongs } from "../../context/playlistSongsProvider";
 import { FaArrowLeft } from "react-icons/fa6";
 import PlaylistPage from "./PlaylistPage";
-import { SearchInput } from "../form/SearchInput";
+import { SearchInput } from "../components/form/SearchInput";
+import { useAllSongs } from "../context/SongsProvider";
+import { usePlaylistSongs } from "../context/playlistSongsProvider";
 
 const Container = styled.div`
 	display: flex;

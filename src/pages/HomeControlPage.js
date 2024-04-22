@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { AiFillHome } from "react-icons/ai";
 import { MdCloudUpload } from "react-icons/md";
-import SongUpload from "../form/SongUpload";
-import { useAuth } from "../../context/authProvider";
+import SongUpload from "../components/form/SongUpload";
+import { useAuth } from "../context/authProvider";
 import { toast } from "react-hot-toast";
-import { usePlaylistSongs } from "../../context/playlistSongsProvider";
+import { usePlaylistSongs } from "../context/playlistSongsProvider";
 
 const Container = styled.div`
 	display: flex;

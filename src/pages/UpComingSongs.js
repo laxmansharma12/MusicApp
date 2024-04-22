@@ -1,9 +1,9 @@
 import React from "react";
 import { IoArrowForwardOutline } from "react-icons/io5";
 import styled from "styled-components";
-import { useUpSongs } from "../../context/upcomingSongsProvider";
+import { useUpSongs } from "../context/upcomingSongsProvider";
 import { useNavigate } from "react-router-dom";
-import empty from "../images/empty.png";
+import empty from "../components/images/empty.png";
 
 const UpComing = styled.div`
 	display: flex;

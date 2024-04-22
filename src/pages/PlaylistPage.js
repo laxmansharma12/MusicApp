@@ -4,11 +4,11 @@ import { GiBookshelf } from "react-icons/gi";
 import { FaPlus } from "react-icons/fa6";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useAllSongs } from "../../context/SongsProvider";
-import PlaylistUpload from "../form/PlaylistUpload";
-import { useAuth } from "../../context/authProvider";
+import { useAllSongs } from "../context/SongsProvider";
+import PlaylistUpload from "../components/form/PlaylistUpload";
+import { useAuth } from "../context/authProvider";
 import { GrDocumentNotes } from "react-icons/gr";
-import { usePlaylistSongs } from "../../context/playlistSongsProvider";
+import { usePlaylistSongs } from "../context/playlistSongsProvider";
 
 const Container = styled.div`
 	display: flex;
@@ -203,7 +203,11 @@ const PlaylistPage = () => {
 					</Label>
 					<FaPlus
 						className="addPlaylist"
-						onClick={() => setShowCreatePlaylist(!showCreatePlaylist)}
+						onClick={() => {
+							auth.user
+								? setShowCreatePlaylist(!showCreatePlaylist)
+								: toast.error("Please login to add playlist");
+						}}
 					/>
 				</Header>
 				<Title>

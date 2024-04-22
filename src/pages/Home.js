@@ -1,8 +1,8 @@
 import React from "react";
-import PlaylistPage from "./pages/PlaylistPage";
-import HomeControlPage from "./pages/HomeControlPage";
+import PlaylistPage from "./PlaylistPage";
+import HomeControlPage from "./HomeControlPage";
 import styled from "styled-components";
-import MusicPage from "./pages/MusicPage";
+import MusicPage from "./MusicPage";
 
 const Container = styled.div`
 	display: flex;

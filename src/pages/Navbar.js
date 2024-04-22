@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { SearchInput } from "../form/SearchInput";
-import Login from "../form/Login";
-import Register from "../form/Register";
+import { SearchInput } from "../components/form/SearchInput";
+import Login from "../components/form/Login";
+import Register from "../components/form/Register";
 import toast from "react-hot-toast";
-import { useAuth } from "../../context/authProvider";
+import { useAuth } from "../context/authProvider";
 import { IoMdCloudUpload } from "react-icons/io";
-import SongUpload from "../form/SongUpload";
+import SongUpload from "../components/form/SongUpload";
 
 const Nav = styled.div`
 	height: 60px;
